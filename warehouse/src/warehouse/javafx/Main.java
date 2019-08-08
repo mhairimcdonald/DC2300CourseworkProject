@@ -21,9 +21,9 @@ public class Main extends Application {
 			loader.setController(new WarehouseController(w));
 			final Parent root = loader.load();
 
-			final Scene scene = new Scene(root, 400, 300);
+			final Scene scene = new Scene(root, 900, 600);
 			scene.getStylesheets().add("/warehouse/javafx/javaStyle.css");
-			primaryStage.setTitle("List_databasae");
+			primaryStage.setTitle("Amazon Simulation");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 

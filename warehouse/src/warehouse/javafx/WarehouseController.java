@@ -1,10 +1,16 @@
 package warehouse.javafx;
 
+import java.io.IOException;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
 import warehouse.model.Warehouse;
 
@@ -22,12 +28,7 @@ public class WarehouseController {
 	
 	@FXML 
 	public void initialize() {
-		ColumnConstraints col = new ColumnConstraints();
-		RowConstraints row = new RowConstraints();
-		col.setMaxWidth(50);
-		row.setMaxHeight(50);
-		simulationBoard.getRowConstraints().add(row);
-		simulationBoard.getColumnConstraints().add(col);
+
 		
 	}
 	
@@ -61,5 +62,23 @@ public class WarehouseController {
 		statusUpdate.setText("Status: Waiting");
 		
 	}
-
+	
+	@FXML 
+	public void newWarehouse() {
+		final FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("NewWarehouseGrid.fxml"));
+		loader.setController(new newWarehouseController());
+		
+		try {
+			final Parent parent = (Parent) loader.load();
+			final Stage newWarehouse = new Stage();
+			newWarehouse.setScene(new Scene(parent, 320, 450));
+			newWarehouse.setResizable(false);
+			newWarehouse.setTitle("New Warehouse");
+			newWarehouse.showAndWait();
+			
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 }
