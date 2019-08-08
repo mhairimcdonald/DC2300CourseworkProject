@@ -8,7 +8,8 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="DC2300CourseworkProject.warehouse.src.warehouse.javafx.WarehouseController">
   <children>
       <SplitPane dividerPositions="0.7973273942093542" prefHeight="18.0" prefWidth="900.0">
         <items>
