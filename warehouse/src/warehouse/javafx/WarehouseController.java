@@ -1,5 +1,6 @@
 package warehouse.javafx;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.fxml.FXML;
@@ -10,8 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
+import warehouse.io.FileLoader;
 import warehouse.model.Warehouse;
 
 public class WarehouseController {
@@ -72,13 +75,25 @@ public class WarehouseController {
 		try {
 			final Parent parent = (Parent) loader.load();
 			final Stage newWarehouse = new Stage();
-			newWarehouse.setScene(new Scene(parent, 320, 450));
+			newWarehouse.setScene(new Scene(parent, 320, 340));
 			newWarehouse.setResizable(false);
 			newWarehouse.setTitle("New Warehouse");
 			newWarehouse.showAndWait();
 			
 		} catch (IOException ex) {
 			ex.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void menuOpenAction() {
+		Stage stage = new Stage();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Resource File");
+		File file = fileChooser.showOpenDialog(stage);
+		if (file != null) {
+			FileLoader fl = new FileLoader();
+			fl.parseFile(file);
 		}
 	}
 }

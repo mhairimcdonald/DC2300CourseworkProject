@@ -18,7 +18,7 @@
               <Menu mnemonicParsing="false" text="File">
                 <items>
                   <MenuItem mnemonicParsing="false" onAction="#newWarehouse" text="New" />
-                  <MenuItem mnemonicParsing="false" text="Open…" />
+                  <MenuItem fx:id="menuOpen" mnemonicParsing="false" onAction="#menuOpenAction" text="Open…" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Save" />
                   <MenuItem mnemonicParsing="false" text="Save As…" />
@@ -51,10 +51,10 @@
                <children>
                   <BorderPane prefHeight="543.0" prefWidth="671.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <top>
-                        <AnchorPane prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                        <AnchorPane prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
                      </top>
                      <left>
-                        <AnchorPane prefHeight="200.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
+                        <AnchorPane prefHeight="200.0" prefWidth="50.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
                      </left>
                      <center>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -86,10 +86,10 @@
                         </AnchorPane>
                      </center>
                      <right>
-                        <AnchorPane prefHeight="200.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
+                        <AnchorPane prefHeight="200.0" prefWidth="50.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
                      </right>
                      <bottom>
-                        <AnchorPane prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                        <AnchorPane prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
                      </bottom>
                   </BorderPane>
                </children>
