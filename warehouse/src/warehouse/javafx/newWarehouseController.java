@@ -1,6 +1,7 @@
 package warehouse.javafx;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +13,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import warehouse.io.ConfigFile;
 
 public class newWarehouseController {
 
@@ -32,8 +35,10 @@ public class newWarehouseController {
 	private TextField capacityInput;
 	@FXML
 	private TextField chargeInput;
+	private ConfigFile cf;
 
 	public newWarehouseController() {
+		cf = new ConfigFile();
 	}
 
 	@FXML
@@ -51,69 +56,51 @@ public class newWarehouseController {
 
 	@FXML
 	public void WarehouseArrangement() {
-		
+
 		columnInput.setText(columnInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
 		rowInput.setText(rowInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
 		storageInput.setText(storageInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
 		packingInput.setText(packingInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
 		robotInput.setText(robotInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
-		robotInput.setText(robotInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
+		capacityInput.setText(capacityInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
 		chargeInput.setText(chargeInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
 
-		int cInput = 3;
-		int rInput = 3;
-		int sInput = 1;
-		int pInput = 1;
-		int roInput = 1;
-		int caInput = 20;
-		int chInput = 1;
-		
-		
+		int columnVar = 3;
+		int rowVar = 3;
+		int shelfVar = 2;
+		int stationVar = 1;
+		int robotVar = 1;
+		int capacityVar = 20;
+		int chargeVar = 1;
+
 		try {
-			if (this.columnInput.getText().trim().length()!=0) {
-				cInput = Integer.parseInt(this.columnInput.getText());
-			}
-			if (this.rowInput.getText().trim().length()!=0) {
-				rInput = Integer.parseInt(this.rowInput.getText());
-			}
-			if (this.storageInput.getText().trim().length()!=0) {
-				sInput = Integer.parseInt(this.storageInput.getText());
-			}
-			if (this.packingInput.getText().trim().length()!=0) {
-				pInput = Integer.parseInt(this.packingInput.getText());
-			}
-			if (this.robotInput.getText().trim().length()!=0) {
-				roInput = Integer.parseInt(this.robotInput.getText());
-			}
-			if (this.capacityInput.getText().trim().length()!=0) {
-				caInput = Integer.parseInt(this.capacityInput.getText());
-			}
-			if (this.chargeInput.getText().trim().length()!=0) {
-				chInput = Integer.parseInt(this.chargeInput.getText());
-			}
+			columnVar = parseToInt(columnVar, columnInput.getText());
+			rowVar = parseToInt(rowVar, rowInput.getText());
+			shelfVar = parseToInt(shelfVar, storageInput.getText());
+			stationVar = parseToInt(stationVar, packingInput.getText());
+			robotVar = parseToInt(robotVar, robotInput.getText());
+			capacityVar = parseToInt(capacityVar, capacityInput.getText());
+			chargeVar = parseToInt(chargeVar, chargeInput.getText());
 
 		} catch (NumberFormatException nfe) {
-
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle ("Incorrect Input");
-				alert.setHeaderText("You may only enter numbers.");
-				alert.showAndWait();
-
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Incorrect Input");
+			alert.setHeaderText("You may only enter numbers.");
+			alert.showAndWait();
 			return;
 		}
-		
-		int[] propertiesArray = new int[7];
-		propertiesArray[0] = cInput;
-		propertiesArray[1] = rInput;
-		propertiesArray[2] = sInput;
-		propertiesArray[3] = pInput;
-		propertiesArray[4] = roInput;
-		propertiesArray[5] = caInput;
-		propertiesArray[6] = chInput;
 
-		final FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("NewWarehouseArrangement.fxml"));
-		loader.setController(new newWarehouseArrangement(cInput, rInput));
+		int[] properties = new int[7];
+		properties[0] = columnVar;
+		properties[1] = rowVar;
+		properties[2] = capacityVar;
+		properties[3] = chargeVar;
+		properties[4] = robotVar;
+		properties[5] = shelfVar;
+		properties[6] = stationVar;
+
+	final FXMLLoader loader = new FXMLLoader();loader.setLocation(getClass().getResource("NewWarehouseArrangement.fxml"));
+		loader.setController(new newWarehouseArrangement(properties));
 
 		try {
 			final Parent parent = (Parent) loader.load();
@@ -130,19 +117,14 @@ public class newWarehouseController {
 		}
 
 	}
-	
-	/*
-	private GridPane createGrid(int col, int row) {
-		GridPane boardGrid = new GridPane();
-		for (int i = 0; i < col; i++) {
-			for (int j = 0; j < row; j++) {
-				Pane tile = new Pane();
-				tile.setId("tile_"+i+"_"+j);
-				boardGrid.add(tile, j, i);
-			}	
+
+	private int parseToInt(int input, String s) {
+		if (s.length() != 0) {
+			input = Integer.parseInt(s);
+			return input;
+		} else {
+			return input;
 		}
-		return boardGrid;
 	}
-	*/
 
 }

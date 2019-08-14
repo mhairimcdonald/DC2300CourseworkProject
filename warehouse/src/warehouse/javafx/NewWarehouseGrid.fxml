@@ -39,21 +39,21 @@
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                  <children>
                                     <Label text="No. Columns" />
-                                    <TextField prefHeight="31.0" prefWidth="50.0" />
+                                    <TextField fx:id="columnInput" prefHeight="31.0" prefWidth="50.0" />
                                     <Label text="No. Rows" />
-                                    <TextField prefHeight="31.0" prefWidth="50.0" />
+                                    <TextField fx:id="rowInput" prefHeight="31.0" prefWidth="50.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                  <children>
                                     <Label text="No. of Storage Shelves" />
-                                    <TextField prefHeight="31.0" prefWidth="50.0" />
+                                    <TextField fx:id="storageInput" prefHeight="31.0" prefWidth="50.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                  <children>
                                     <Label text="No. of Packing Stations" />
-                                    <TextField prefHeight="31.0" prefWidth="50.0" />
+                                    <TextField fx:id="packingInput" prefHeight="31.0" prefWidth="50.0" />
                                  </children>
                               </HBox>
                            </children>
@@ -71,19 +71,19 @@
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                  <children>
                                     <Label text="No. of Robots &amp; Pads" />
-                                    <TextField prefHeight="31.0" prefWidth="50.0" />
+                                    <TextField fx:id="robotInput" prefHeight="31.0" prefWidth="50.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                  <children>
                                     <Label text="Robot Battery Capacity" />
-                                    <TextField prefHeight="31.0" prefWidth="50.0" />
+                                    <TextField fx:id="capacityInput" prefHeight="31.0" prefWidth="50.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="321.0" spacing="10.0">
                                  <children>
                                     <Label text="Charging Pad Charge Rate" />
-                                    <TextField prefHeight="31.0" prefWidth="50.0" />
+                                    <TextField fx:id="chargeInput" prefHeight="31.0" prefWidth="50.0" />
                                  </children>
                               </HBox>
                            </children>
