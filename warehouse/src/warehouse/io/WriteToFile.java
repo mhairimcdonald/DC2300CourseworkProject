@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import warehouse.io.configActors.*;
+
 public class WriteToFile {
 
 	public WriteToFile() {
@@ -30,6 +32,18 @@ public class WriteToFile {
 		returnString += unpackHeight(cf) + "\n";
 		returnString += unpackCapacity(cf) + "\n";
 		returnString += unpackChargeSpeed(cf) + "\n";
+		for (ConfigRobot c : cf.getPodRobot()) {
+			returnString += unpackRobotPod(c);
+		}
+		for (ConfigStorageShelf c : cf.getShelf()) {
+			returnString += unpackStorageShelf(c);
+		}
+		for (ConfigPackingStation c : cf.getStation()) {
+			returnString += unpackPackingStation(c);
+		}
+		for (ConfigOrder c : cf.getOrder()) {
+			returnString += unpackOrders(c);
+		}
 		return returnString;
 	}
 
@@ -53,65 +67,27 @@ public class WriteToFile {
 		return s;
 	}
 
-	private String unpackRobotPods(ConfigFile cf) {
-		String s = "";
-		//Robot String = "podRobot " + id + " " + xpos + " " + ypos + "\n"
-		//Insert the Charging Pod ID at 9 in the Robot String 
+	private String unpackRobotPod(ConfigRobot c) {
+		String s = "podRobot "+c.getChargingPoduID()+ " "+c.getuID()+" "+c.getRow()+" "+c.getCol()+"\n";
 		return s;
 	}
 
-	private String unpackRobots(ConfigFile cf) {
-		String s = "";
-		int i = 0;
-		while (i < cf.getPodRobot().size()) {
-			// Placeholder
-			// s = cf.getPodRobot().get(i).toString();
-			i++;
-		}
+	private String unpackStorageShelf(ConfigStorageShelf c) {
+		String s = "shelf "+c.getuID()+" "+c.getRow()+" "+c.getCol()+"\n";
 		return s;
 	}
 
-	private String unpackChargingPods(ConfigFile cf) {
-		String s = "";
-		int i = 0;
-		while (i < cf.getPod().size()) {
-			// Placeholder
-			// s = cf.getPod().get(i).toString();
-			i++;
-		}
+	private String unpackPackingStation(ConfigPackingStation c) {
+		String s = "station "+c.getuID()+" "+c.getRow()+" "+c.getCol()+"\n";
 		return s;
 	}
 
-	private String unpackStorageShelves(ConfigFile cf) {
-		String s = "";
-		int i = 0;
-		while (i < cf.getShelf().size()) {
-			// Placeholder
-			// s = cf.getShelf().get(i).toString();
-			i++;
+	private String unpackOrders(ConfigOrder c) {
+		String s = "order "+c.getuID();
+		for (String os : c.getStorageLocations()) {
+			s += " "+os;
 		}
-		return s;
-	}
-
-	private String unpackPackingStations(ConfigFile cf) {
-		String s = "";
-		int i = 0;
-		while (i < cf.getStation().size()) {
-			// Placeholder
-			// s = cf.getStation().get(i).toString();
-			i++;
-		}
-		return s;
-	}
-
-	private String unpackOrders(ConfigFile cf) {
-		String s = "";
-		int i = 0;
-		while (i < cf.getOrder().size()) {
-			// Placeholder
-			// s = cf.getOrder().get(i).toString();
-			i++;
-		}
+		s += "\n";
 		return s;
 	}
 
