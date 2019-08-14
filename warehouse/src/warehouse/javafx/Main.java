@@ -14,11 +14,10 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			final Warehouse w = createWarehouse(0,0);
 
 			final FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("WarehouseScene.fxml"));
-			loader.setController(new WarehouseController(w));
+			loader.setController(new WarehouseController());
 			final Parent root = loader.load();
 
 			final Scene scene = new Scene(root, 900, 600);

@@ -25,6 +25,7 @@ import javafx.scene.layout.Pane;
 import warehouse.io.ConfigFile;
 import warehouse.io.FileLoader;
 import warehouse.io.WriteToFile;
+import warehouse.io.configActors.*;
 import warehouse.model.Warehouse;
 
 public class WarehouseController {
@@ -44,8 +45,9 @@ public class WarehouseController {
 	@FXML
 	private GridPane simulationBoard;
 	private ConfigFile cf;
+	private Pane[][] gridPaneIndex;
 
-	public WarehouseController(Warehouse w) {
+	public WarehouseController() {
 		cf = new ConfigFile();
 	}
 
@@ -113,12 +115,14 @@ public class WarehouseController {
 		fileChooser.getExtensionFilters().add(extFilter);
 		File file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
+			reset();
 			FileLoader fl = new FileLoader();
 			cf = fl.parseFile(file);
 			int cols = cf.getWidth();
 			int rows = cf.getHeight();
 			createGridBoard(cols, rows);
 		}
+
 	}
 
 	@FXML
@@ -158,6 +162,7 @@ public class WarehouseController {
 	public void createGridBoard(int cols, int rows) {
 		int numCols = 3;
 		int numRows = 3;
+		
 		// If values returned are greater than zero, set col and rows
 		if (cols != 0) {
 			numCols = cols;
@@ -165,6 +170,7 @@ public class WarehouseController {
 		if (rows != 0) {
 			numRows = rows;
 		}
+		gridPaneIndex = new Pane[numRows][numCols];
 		GridPane gp = new GridPane();
 		// Make the cells obvious
 		gp.setGridLinesVisible(true);
@@ -174,43 +180,58 @@ public class WarehouseController {
 		colConst.setPercentWidth(100.0 / numCols);
 		RowConstraints rowConst = new RowConstraints();
 		rowConst.setPercentHeight(100.0 / numRows);
-		
-		//Create the ActorShape which is used to add Actor's visual representations onto the gameBoard.
-		ActorShapes creator = new ActorShapes();
-		
-		// Add a pane to each cell.
+
+		// Set Column Constraints on all Columns
 		for (int i = 0; i < numCols; i++) {
-			//Set the number of columns to include in the grid
 			gp.getColumnConstraints().add(colConst);
+		}
+		// Set Row Constraints on all Rows
+		for (int i = 0; i < numRows; i++) {
 			gp.getRowConstraints().add(rowConst);
-			
+		}
+		// Place an AnchorPane and give it a unique id in each cell.
+		for (int i = 0; i < numCols; i++) {
 			for (int j = 0; j < numRows; j++) {
-				//Create the pane to be added to this cell within the gridpane
 				AnchorPane p = new AnchorPane();
-				//Set the pane's ID to equal it's position
-				p.setId("anchorPane_" + i + "_" + j);
-				//Create the StackPane used for an Actor object
-				StackPane sp = new StackPane();
-				StackPane sp1 = new StackPane();
-				sp.setId("c001");
-				sp1.setId("r001");
-				//Create the visual representation of the object.
-				sp = creator.createChargePod("c001");
-				sp1 = creator.createRobot("r001");
-				anchorToEdges(sp);
-				anchorToEdges(sp1);
-				p.getChildren().add(sp);
-				p.getChildren().add(sp1);
+				p.setId("pane " + i + " " + j);
 				gp.add(p, i, j);
+				gridPaneIndex[j][i] = p;
 			}
 		}
-		creator = null;
+		//Initialize the creator used to make the different actor visuals
+		ActorShapes creator = new ActorShapes();
+		
+		for (ConfigPackingStation c : cf.getStation()) {
+			StackPane sp = new StackPane();
+			sp.setId(c.getuID());
+			sp = creator.createPackingStation(c.getuID());
+			anchorToEdges(sp);
+			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(sp);
+		}
+		for (ConfigRobot c : cf.getPodRobot()) {
+			StackPane spr = new StackPane();
+			spr.setId(c.getuID());
+			spr = creator.createRobot(c.getuID());
+			anchorToEdges(spr);
+			
+			StackPane spc = new StackPane();
+			spc.setId(c.getuID());
+			spc = creator.createChargePod(c.getuID());
+			anchorToEdges(spc);
+			
+			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(spc);
+			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(spr);
+		}
+		for (ConfigStorageShelf c : cf.getShelf()) {
+			StackPane sp = new StackPane();
+			sp.setId(c.getuID());
+			sp = creator.createStorageShelf(c.getuID());
+			anchorToEdges(sp);
+			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(sp);
+		}
 
-		// Set the grid to take up the entire anchor size
-		AnchorPane.setBottomAnchor(gp, 0.0);
-		AnchorPane.setTopAnchor(gp, 0.0);
-		AnchorPane.setLeftAnchor(gp, 0.0);
-		AnchorPane.setRightAnchor(gp, 0.0);
+		
+		anchorToEdges(gp);
 
 		if (simulationBoard == null) {
 			// If there is currently no board, add this one
@@ -225,11 +246,16 @@ public class WarehouseController {
 			gridBoardAnchor.getChildren().addAll(gp);
 		}
 	}
-	
+
 	private void anchorToEdges(Node n) {
 		AnchorPane.setBottomAnchor(n, 0.0);
 		AnchorPane.setTopAnchor(n, 0.0);
 		AnchorPane.setLeftAnchor(n, 0.0);
 		AnchorPane.setRightAnchor(n, 0.0);
+	}
+	
+	private void reset() {
+		gridPaneIndex = null;
+		cf = null;
 	}
 }
