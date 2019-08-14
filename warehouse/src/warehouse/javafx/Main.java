@@ -14,7 +14,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			final Warehouse w = createWarehouse();
+			final Warehouse w = createWarehouse(0,0);
 
 			final FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("WarehouseScene.fxml"));
@@ -32,8 +32,8 @@ public class Main extends Application {
 		}
 	}
 	
-	private Warehouse createWarehouse() {
-		final Warehouse w = new Warehouse();
+	private Warehouse createWarehouse(int row, int col) {
+		final Warehouse w = new Warehouse(row, col);
 		
 		/*
 		 * TODO: Input the creation of the base warehouse variables here
