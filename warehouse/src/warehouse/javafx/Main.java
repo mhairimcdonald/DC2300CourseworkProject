@@ -30,7 +30,7 @@ public class Main extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}//start
 	
 	private Warehouse createWarehouse() {
 		final Warehouse w = new Warehouse();
@@ -40,10 +40,10 @@ public class Main extends Application {
 		 */
 		return w;
 		
-	}
+	}//createWarehouse
 
 	public static void main(String[] args) {
 		launch(args);
-	}
+	}//main
 
 }
