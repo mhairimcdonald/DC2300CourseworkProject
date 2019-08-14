@@ -2,6 +2,8 @@ package warehouse.model;
 
 public class ChargingPod implements Actor {
 
+	private int x, y;
+	private String UID;
 	private int chargingSpeed;
 	
 	@Override
