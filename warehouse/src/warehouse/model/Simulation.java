@@ -7,7 +7,6 @@ import warehouse.io.ConfigFile;
 
 public class Simulation {
 	private int tickCounter = 0;
-
 	private List<Actor> actors;
 	private List<Actor> newActors;
 	private Warehouse warehouse;
@@ -35,10 +34,27 @@ public class Simulation {
 	}// dispatch
 
 	public void generateReport() {
+    
+  }// generate report
 
+	
+	public void continueSimulation() {
+		
+	}//continueSimulation
+	
+	public void dispatch() {
+		
+	}//dispatch
+	
+	public void generateReport() {
+		
 	}// generate report
 	
-	public void reset() {
+	public void start() {
+		
+	}//start
+
+  public void reset() {
 		running = true;
 		actors.clear();
 		warehouse.clear();
