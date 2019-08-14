@@ -18,18 +18,18 @@ public class FileLoader {
 
 	}
 
-	public String parseFile(File f) {
+	public ConfigFile parseFile(File f) {
 		Scanner read = null;
-
+		ConfigFile cf = null;
 		try {
 			read = new Scanner(f);
 			if (read.hasNext()) {
 				if (!read.nextLine().equals("format 1")) {
-					return "err";
+					return null;
 				} else {
 					String n = "";
 					//This is standing in place for the Warehouse, as that's what this will actually make
-					ConfigFile cf = new ConfigFile();
+					cf = new ConfigFile();
 					while (read.hasNext()) {
 						//Sorts through the input and appends it to the Warehouse (Currently ConfigFile)
 						n = read.nextLine();
@@ -37,9 +37,9 @@ public class FileLoader {
 					}
 				}
 			}
-			return "";
+			return cf;
 		} catch (FileNotFoundException e) {
-			return "err";
+			return null;
 		} finally {
 			if (read != null) {
 				read.close();
