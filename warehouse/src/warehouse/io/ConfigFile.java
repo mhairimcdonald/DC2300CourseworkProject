@@ -2,7 +2,7 @@ package warehouse.io;
 
 import java.util.ArrayList;
 
-import warehouse.model.*;
+import warehouse.io.configActors.*;
 
 public class ConfigFile {
 	
@@ -10,19 +10,17 @@ public class ConfigFile {
 	private int height;
 	private int capacity;
 	private int chargeSpeed;
-	private ArrayList<Robot> robot;
-	private ArrayList<ChargingPod> pod;
-	private ArrayList<StorageShelf> shelf;
-	private ArrayList<PackingStation> station;
-	private ArrayList<Order> order;
+	private ArrayList<ConfigRobot> robots;
+	private ArrayList<ConfigStorageShelf> shelves;
+	private ArrayList<ConfigPackingStation> stations;
+	private ArrayList<ConfigOrder> orders;
 	
 	public ConfigFile() {
 		
-		robot = new ArrayList<Robot>();
-		pod = new ArrayList<ChargingPod>();
-		shelf = new ArrayList<StorageShelf>();
-		station = new ArrayList<PackingStation>();
-		order = new ArrayList<Order>();
+		robots = new ArrayList<ConfigRobot>();
+		shelves = new ArrayList<ConfigStorageShelf>();
+		stations = new ArrayList<ConfigPackingStation>();
+		orders = new ArrayList<ConfigOrder>();
 		
 	}
 
@@ -58,44 +56,36 @@ public class ConfigFile {
 		this.chargeSpeed = chargeSpeed;
 	}
 
-	public ArrayList<Robot> getPodRobot() {
-		return robot;
+	public ArrayList<ConfigRobot> getPodRobot() {
+		return robots;
 	}
 
-	public void addRobot(Robot r) {
-		this.robot.add(r);
+	public void addRobot(ConfigRobot r) {
+		this.robots.add(r);
 	}
 
-	public ArrayList<StorageShelf> getShelf() {
-		return shelf;
+	public ArrayList<ConfigStorageShelf> getShelf() {
+		return shelves;
 	}
 
-	public void addShelf(StorageShelf s) {
-		this.shelf.add(s);
+	public void addShelf(ConfigStorageShelf s) {
+		this.shelves.add(s);
 	}
 
-	public ArrayList<PackingStation> getStation() {
-		return station;
+	public ArrayList<ConfigPackingStation> getStation() {
+		return stations;
 	}
 
-	public void addStation(PackingStation s) {
-		this.station.add(s);
+	public void addStation(ConfigPackingStation s) {
+		this.stations.add(s);
 	}
 
-	public ArrayList<Order> getOrder() {
-		return order;
+	public ArrayList<ConfigOrder> getOrder() {
+		return orders;
 	}
 
-	public void addOrder(Order s) {
-		this.order.add(s);
-	}
-
-	public ArrayList<ChargingPod> getPod() {
-		return pod;
-	}
-
-	public void addPod(ChargingPod p) {
-		this.pod.add(p);
+	public void addOrder(ConfigOrder s) {
+		this.orders.add(s);
 	}
 
 }
