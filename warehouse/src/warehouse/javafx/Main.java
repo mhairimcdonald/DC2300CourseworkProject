@@ -15,6 +15,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			final Warehouse w = createWarehouse();
+			int numTicks = 1; //default for start of simulation
 
 			final FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("WarehouseScene.fxml"));

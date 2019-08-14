@@ -6,6 +6,8 @@ public class Robot implements Actor {
 	private int currentCharge;
 	private String chargePodID;
 	private int maxCharge;
+	private int x,y;
+	private String UID;
 	
 	@Override
 	public void tick() {
@@ -13,7 +15,7 @@ public class Robot implements Actor {
 		
 	}//tick
 	
-	//method to decide if robot is able to accept latest request
+	//method to decide if robot is able to accept latest request, will need the path finding algortihms
 	public void requestDecision() {
 		
 	}//accept
@@ -38,6 +40,30 @@ public class Robot implements Actor {
 		return chargePodID;
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public String getUID() {
+		return UID;
+	}
+
+	public void setUID(String uID) {
+		UID = uID;
+	}
+
 	public void setChargePodID(String chargePodID) {
 		this.chargePodID = chargePodID;
 	}
@@ -50,17 +76,10 @@ public class Robot implements Actor {
 		this.maxCharge = maxCharge;
 	}
 
-	public void detectPower() {
-		// Not sure if this is needed
-	}//detectPower
-	
-	public void move() {
-		// On each tick do we need this to call algorithm to decide what move to take then make the move?
-	}//move
-	
-	
-	public void take() {
-		//Robot takes item when it detects shelf it was seeking?
-	}//take
+	@Override
+	public void perform() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
