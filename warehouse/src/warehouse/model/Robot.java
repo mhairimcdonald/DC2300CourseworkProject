@@ -6,7 +6,34 @@ public class Robot implements Actor {
 	private int currentCharge;
 	private String chargePodID;
 	private int maxCharge;
+	private int noOfItems;
+	private Location location;
+	private String UID;
 	
+	public int getNoOfItems() {
+		return noOfItems;
+	}
+
+	public void setNoOfItems(int noOfItems) {
+		this.noOfItems = noOfItems;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	public String getUID() {
+		return UID;
+	}
+
+	public void setUID(String uID) {
+		UID = uID;
+	}
+
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
@@ -62,5 +89,28 @@ public class Robot implements Actor {
 	public void take() {
 		//Robot takes item when it detects shelf it was seeking?
 	}//take
+
+	@Override
+	public void perform() {
+		//positon of robot
+		//not sure how to handle where robot aims at
+		if(objectAtLocation.getUID() = targetUID) {
+			Actor actor = objectAtLocation;
+			switch(actor.getName()) {
+			case("ChargingPod"):{
+				if(currentCharge < maxCharge) {
+					((ChargingPod) actor).charge(this);
+				}
+			}
+			case("PackingStation"):{ 
+				((PackingStation) actor).pack(this);
+			}
+			case("StorageShelf"):{noOfItems++;}
+			case("Robot"):{crash();}
+			default:{;}
+			
+			}
+		}
+	}
 	
 }

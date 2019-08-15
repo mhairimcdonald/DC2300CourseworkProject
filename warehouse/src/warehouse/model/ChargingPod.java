@@ -2,7 +2,7 @@ package warehouse.model;
 
 public class ChargingPod implements Actor {
 
-	private int x, y;
+	private Location location;
 	private String UID;
 	private int chargingSpeed;
 	
@@ -14,9 +14,9 @@ public class ChargingPod implements Actor {
 	
 	//This method deals with charging the pods in the simulation. 
 	public void charge(Robot currentRobot) {
-		currentRobot.setCharge(currentRobot.getCharge() + chargingSpeed);
-		if (currentRobot.getCharge()> currentRobot.getMaxCharge()) {
-			currentRobot.setCharge(currentRobot.getMaxCharge);//Probably a better way of dealing with max charge
+		currentRobot.setCurrentCharge(currentRobot.getCurrentCharge() + chargingSpeed);
+		if (currentRobot.getCurrentCharge()> currentRobot.getMaxCharge()) {
+			currentRobot.setCurrentCharge(currentRobot.getMaxCharge());//Probably a better way of dealing with max charge
 		}
 		
 	}//charge
@@ -25,8 +25,30 @@ public class ChargingPod implements Actor {
 		return chargingSpeed;
 	}
 
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	public String getUID() {
+		return UID;
+	}
+
+	public void setUID(String uID) {
+		UID = uID;
+	}
+
 	public void setChargingSpeed(int chargingSpeed) {
 		this.chargingSpeed = chargingSpeed;
+	}
+
+	@Override
+	public void perform() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

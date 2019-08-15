@@ -1,6 +1,7 @@
 package warehouse.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import warehouse.io.ConfigFile;
@@ -26,7 +27,11 @@ public class Simulation {
 	}// start
 
 	public void continueSimulation() {
-
+		tickCounter++;
+		for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
+			Actor actor = iter.next();
+			actor.perform();
+		}
 	}// continueSimulation
 
 	public void dispatch() {
@@ -36,19 +41,6 @@ public class Simulation {
 	public void generateReport() {
     
   }// generate report
-
-	
-	public void continueSimulation() {
-		
-	}//continueSimulation
-	
-	public void dispatch() {
-		
-	}//dispatch
-	
-	public void generateReport() {
-		
-	}// generate report
 	
 	public void start() {
 		
