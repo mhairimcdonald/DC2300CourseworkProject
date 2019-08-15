@@ -4,22 +4,24 @@ import java.util.ArrayList;
 
 public class ConfigOrder {
 	
-	private String uID;
+	private int ticksToPack;
 	private ArrayList<String> storageLocations;
 	
-	public ConfigOrder() {}
+	public ConfigOrder() {
+		storageLocations = new ArrayList<String>();
+	}
 	
-	public ConfigOrder(String uID, ArrayList<String> storageLocations) {
-		this.uID = uID;
+	public ConfigOrder(String ticksToPack, ArrayList<String> storageLocations) throws NumberFormatException {
+		this.ticksToPack = Integer.parseInt(ticksToPack);
 		this.storageLocations = storageLocations;
 	}
 
-	public String getuID() {
-		return uID;
+	public int getTicksToPack() {
+		return ticksToPack;
 	}
 
-	public void setuID(String uID) {
-		this.uID = uID;
+	public void setTicksToPack(String ticksToPack) throws NumberFormatException {
+		this.ticksToPack = Integer.parseInt(ticksToPack);
 	}
 
 	public ArrayList<String> getStorageLocations() {

@@ -83,7 +83,7 @@ public class WriteToFile {
 	}
 
 	private String unpackOrders(ConfigOrder c) {
-		String s = "order "+c.getuID();
+		String s = "order "+c.getTicksToPack();
 		for (String os : c.getStorageLocations()) {
 			s += " "+os;
 		}
