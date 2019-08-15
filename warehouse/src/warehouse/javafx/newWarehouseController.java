@@ -1,7 +1,6 @@
 package warehouse.javafx;
 
 import java.io.IOException;
-import java.util.Properties;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,11 +10,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import warehouse.io.ConfigFile;
 
 public class newWarehouseController {
 
@@ -35,11 +31,8 @@ public class newWarehouseController {
 	private TextField capacityInput;
 	@FXML
 	private TextField chargeInput;
-	private ConfigFile cf;
 
-	public newWarehouseController() {
-		cf = new ConfigFile();
-	}
+	public newWarehouseController() {}
 
 	@FXML
 	public void initialize() {
@@ -53,17 +46,22 @@ public class newWarehouseController {
 		// close window
 		stage.close();
 	}
+	
+	public void hideWindow() {
+		Stage stage = (Stage) closeButton.getScene().getWindow();
+		stage.hide();
+	}
 
 	@FXML
 	public void WarehouseArrangement() {
 
-		columnInput.setText(columnInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
-		rowInput.setText(rowInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
-		storageInput.setText(storageInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
-		packingInput.setText(packingInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
-		robotInput.setText(robotInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
-		capacityInput.setText(capacityInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
-		chargeInput.setText(chargeInput.getText().replaceAll("[^a-zA-Z0-9]", ""));
+		columnInput.setText(columnInput.getText().replaceAll("[^0-9]", ""));
+		rowInput.setText(rowInput.getText().replaceAll("[^0-9]", ""));
+		storageInput.setText(storageInput.getText().replaceAll("[^0-9]", ""));
+		packingInput.setText(packingInput.getText().replaceAll("[^0-9]", ""));
+		robotInput.setText(robotInput.getText().replaceAll("[^0-9]", ""));
+		capacityInput.setText(capacityInput.getText().replaceAll("[^0-9]", ""));
+		chargeInput.setText(chargeInput.getText().replaceAll("[^0-9]", ""));
 
 		int columnVar = 3;
 		int rowVar = 3;
@@ -109,7 +107,8 @@ public class newWarehouseController {
 			newWarehouse.setScene(scene);
 			newWarehouse.setResizable(false);
 			newWarehouse.setTitle("New Warehouse");
-			newWarehouse.show();
+			newWarehouse.initModality(Modality.APPLICATION_MODAL);
+			newWarehouse.showAndWait();
 			closeButtonAction();
 
 		} catch (IOException ex) {

@@ -8,17 +8,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -26,7 +24,6 @@ import warehouse.io.ConfigFile;
 import warehouse.io.FileLoader;
 import warehouse.io.WriteToFile;
 import warehouse.io.configActors.*;
-import warehouse.model.Warehouse;
 
 public class WarehouseController {
 
@@ -44,11 +41,11 @@ public class WarehouseController {
 	private MenuItem menuQuit;
 	@FXML
 	private GridPane simulationBoard;
-	private ConfigFile cf;
+	public static ConfigFile primaryConfigFile;
 	private Pane[][] gridPaneIndex;
 
 	public WarehouseController() {
-		cf = new ConfigFile();
+		primaryConfigFile = new ConfigFile();
 	}
 
 	@FXML
@@ -99,11 +96,20 @@ public class WarehouseController {
 			newWarehouse.setScene(new Scene(parent, 320, 340));
 			newWarehouse.setResizable(false);
 			newWarehouse.setTitle("New Warehouse");
+			newWarehouse.initModality(Modality.APPLICATION_MODAL);
 			newWarehouse.showAndWait();
+			reloadPrimaryConfigFile();
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	private void reloadPrimaryConfigFile() {
+		int cols = primaryConfigFile.getWidth();
+		int rows = primaryConfigFile.getHeight();
+		createGridBoard(cols, rows);
+		
 	}
 
 	@FXML
@@ -117,10 +123,8 @@ public class WarehouseController {
 		if (file != null) {
 			reset();
 			FileLoader fl = new FileLoader();
-			cf = fl.parseFile(file);
-			int cols = cf.getWidth();
-			int rows = cf.getHeight();
-			createGridBoard(cols, rows);
+			primaryConfigFile = fl.parseFile(file);
+			reloadPrimaryConfigFile();
 		}
 
 	}
@@ -139,9 +143,8 @@ public class WarehouseController {
 		if (f != null) {
 			WriteToFile wf = new WriteToFile();
 			try {
-				wf.writeFile(f, cf);
+				wf.writeFile(f, primaryConfigFile);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -201,14 +204,14 @@ public class WarehouseController {
 		//Initialize the creator used to make the different actor visuals
 		ActorShapes creator = new ActorShapes();
 		
-		for (ConfigPackingStation c : cf.getStation()) {
+		for (ConfigPackingStation c : primaryConfigFile.getStation()) {
 			StackPane sp = new StackPane();
 			sp.setId(c.getuID());
 			sp = creator.createPackingStation(c.getuID());
 			anchorToEdges(sp);
 			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(sp);
 		}
-		for (ConfigRobot c : cf.getPodRobot()) {
+		for (ConfigRobot c : primaryConfigFile.getPodRobot()) {
 			StackPane spr = new StackPane();
 			spr.setId(c.getuID());
 			spr = creator.createRobot(c.getuID());
@@ -222,7 +225,7 @@ public class WarehouseController {
 			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(spc);
 			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(spr);
 		}
-		for (ConfigStorageShelf c : cf.getShelf()) {
+		for (ConfigStorageShelf c : primaryConfigFile.getShelf()) {
 			StackPane sp = new StackPane();
 			sp.setId(c.getuID());
 			sp = creator.createStorageShelf(c.getuID());
@@ -256,6 +259,6 @@ public class WarehouseController {
 	
 	private void reset() {
 		gridPaneIndex = null;
-		cf = null;
+		primaryConfigFile = null;
 	}
 }
