@@ -26,7 +26,7 @@ import warehouse.io.ConfigFile;
 import warehouse.io.FileLoader;
 import warehouse.io.WriteToFile;
 import warehouse.io.configActors.*;
-import warehouse.model.Warehouse;
+import warehouse.model.*;
 
 public class WarehouseController {
 
@@ -64,6 +64,7 @@ public class WarehouseController {
 		pauseButton.setDefaultButton(true);
 		resetButton.setDisable(false);
 		statusUpdate.setText("Status: Running");
+		Simulation simulation = new Simulation();
 
 	}
 

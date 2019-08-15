@@ -6,6 +6,13 @@ public class ChargingPod implements Actor {
 	private String UID;
 	private int chargingSpeed;
 	
+	public ChargingPod(Location location, String uID, int chargingSpeed) {
+		super();
+		this.location = location;
+		UID = uID;
+		this.chargingSpeed = chargingSpeed;
+	}
+
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
@@ -45,10 +52,11 @@ public class ChargingPod implements Actor {
 		this.chargingSpeed = chargingSpeed;
 	}
 
-	@Override
-	public void perform() {
-		// TODO Auto-generated method stub
-		
+	public ChargingPod(Location location, String uID, int chargingSpeed) {
+		super();
+		this.location = location;
+		UID = uID;
+		this.chargingSpeed = chargingSpeed;
 	}
 	
 	
