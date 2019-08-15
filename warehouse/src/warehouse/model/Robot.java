@@ -2,13 +2,25 @@ package warehouse.model;
 
 public class Robot implements Actor {
 	
-	private Boolean hasItem;
 	private int currentCharge;
 	private String chargePodID;
 	private int maxCharge;
 	private int noOfItems;
 	private Location location;
-	private String UID;
+	private String UID;	
+	
+	
+	public Robot(String chargePodID, int maxCharge, Location location, String uID) {
+		super();
+		this.currentCharge = maxCharge;
+		this.chargePodID = chargePodID;
+		this.maxCharge = maxCharge;
+		this.noOfItems = 0;
+		this.location = location;
+		this.UID = uID;
+	}
+
+
 	
 	public int getNoOfItems() {
 		return noOfItems;
@@ -33,12 +45,6 @@ public class Robot implements Actor {
 	public void setUID(String uID) {
 		UID = uID;
 	}
-
-	@Override
-	public void tick() {
-		// TODO Auto-generated method stub
-		
-	}//tick
 	
 	//method to decide if robot is able to accept latest request
 	public void requestDecision() {
@@ -92,7 +98,7 @@ public class Robot implements Actor {
 
 
 	@Override
-	public void perform() {
+	public void tick() {
 		//positon of robot
 		//not sure how to handle where robot aims at
 		if(objectAtLocation.getUID() = targetUID) {
@@ -112,6 +118,11 @@ public class Robot implements Actor {
 			
 			}
 		}
+	}
+
+	private void crash() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

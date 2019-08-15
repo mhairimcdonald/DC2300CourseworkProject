@@ -5,10 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import warehouse.io.ConfigFile;
+import warehouse.io.configActors.*;
 
 public class Simulation {
 	private int tickCounter = 0;
+	private List<Order> orders;
+	private List<ConfigOrder> configOrders;
 	private List<Actor> actors;
+	private List<ConfigActor> configActors;
 	private List<Actor> newActors;
 	private Warehouse warehouse;
 	private Warehouse updateWarehouse;
@@ -18,8 +22,59 @@ public class Simulation {
 	public void start(ConfigFile cf) {
 		int width = cf.getWidth();
 		int height = cf.getHeight();
+		warehouse = new Warehouse(height, width);
 		actors = new ArrayList<Actor>();
-		newActors = new ArrayList<Actor>();
+		orders = new ArrayList<Order>();
+		configOrders = new ArrayList<ConfigOrder>();
+		configOrders.addAll(cf.getOrder());
+		configActors = new ArrayList<ConfigActor>();
+		configActors.addAll(cf.getPodRobot()); //add config robots
+		configActors.addAll(cf.getShelf()); //add config shelves
+		configActors.addAll(cf.getStation()); // add config stations
+		for(ConfigOrder order: configOrders) {
+			ArrayList<String> listOfStorageLocations = order.getStorageLocations();
+			int ticksToPack = Integer.parseInt(order.getuID());//NEED TO CHAGE HOW ORDER IS READ
+			Order newOrder = new Order(ticksToPack, listOfStorageLocations);
+			orders.add(newOrder);
+		}
+		
+		for(ConfigActor actor: configActors) {
+			switch(actor.getClass().getCanonicalName()) {
+			case "ConfigRobot":{
+				int row = actor.getRow();
+				int col = actor.getCol();
+				String UID = actor.getuID();
+				Location location = new Location(row, col);
+				String poduID = ((ConfigRobot)actor).getChargingPoduID();
+				int chargeSpeed = cf.getChargeSpeed();
+				ChargingPod chargePod = new ChargingPod(location, poduID, chargeSpeed);
+				actors.add(chargePod);
+				
+				int capacity = cf.getCapacity();
+				Robot robot = new Robot(poduID, capacity, location, UID);
+				actors.add(robot);
+			}// case ConfigRobot
+			case "ConfigStorageShelf":{
+				int row = actor.getRow();
+				int col = actor.getCol();
+				String UID = actor.getuID();
+				Location location = new Location(row, col);
+				StorageShelf storageShelf = new StorageShelf(location, UID);
+				actors.add(storageShelf);
+			}//case ConfigStorageShelf
+			case "ConfigPackingStation":{
+				int row = actor.getRow();
+				int col = actor.getCol();
+				String UID = actor.getuID();
+				Location location = new Location(row, col);
+				PackingStation packingStation = new PackingStation(location, UID);
+				actors.add(packingStation);
+				
+			}// case ConfigPackingStation
+			
+			}
+		}
+		//newActors = new ArrayList<Actor>();
 		warehouse = new Warehouse(width, height);
 		updateWarehouse = new Warehouse(width, height);
 		
@@ -31,7 +86,7 @@ public class Simulation {
 		tickCounter++;
 		for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
 			Actor actor = iter.next();
-			actor.perform();
+			actor.tick();
 		}
 	}// continueSimulation
 
@@ -42,11 +97,6 @@ public class Simulation {
 	public void generateReport() {
     
   }// generate report
-
-	
-	public void start() {
-		
-	}//start
 
   public void reset() {
 		running = true;

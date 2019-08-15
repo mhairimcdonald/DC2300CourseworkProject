@@ -3,9 +3,22 @@ package warehouse.model;
 public class PackingStation implements Actor {
 
 	private int noOfItems;
-	private int ticksToPackItem, ticksToDispatch, ticksPacking;
+	private int ticksToPackItems, ticksToDispatch, ticksPacking;
 	private Location location;
 	private String UID;
+	private Order currentOrder;
+	public PackingStation(Location location, String uID) {
+		super();
+		this.noOfItems = 0;
+		this.ticksToPackItems = ticksToPackItems;
+		this.ticksToDispatch = 0;
+		this.ticksPacking = 0;
+		this.location = location;
+		this.currentOrder = null;
+		UID = uID;
+	}
+
+
 	
 	public int getNoOfItems() {
 		return noOfItems;
@@ -15,19 +28,24 @@ public class PackingStation implements Actor {
 		this.noOfItems = noOfItems;
 	}
 
-	public int getTicksToPackItem() {
+	public int getTicksToPackItems() {
 		return ticksToPackItem;
 	}
 
-	public void setTicksToPackItem(int ticksToPackItem) {
-		this.ticksToPackItem = ticksToPackItem;
+	public void setTicksToPackItems(int ticksToPackItems) {
+		this.ticksToPackItems = ticksToPackItems;
 	}
 
-	@Override
-	public void tick() {
-		// TODO Auto-generated method stub
-		
-	}//tick
+	public PackingStation(int noOfItems, int ticksToPackItem, int ticksToDispatch, int ticksPacking, Location location,
+			String uID) {
+		super();
+		this.noOfItems = noOfItems;
+		this.ticksToPackItems = ticksToPackItem;
+		this.ticksToDispatch = ticksToDispatch;
+		this.ticksPacking = ticksPacking;
+		this.location = location;
+		UID = uID;
+	}
 
 	public void ask() {
 		
@@ -86,7 +104,7 @@ public class PackingStation implements Actor {
 	}//receive
 
 	@Override
-	public void perform() {
+	public void tick() {
 		// TODO Auto-generated method stub
 		if(noOfItems > 0) {
 			ticksPacking++;
@@ -94,6 +112,7 @@ public class PackingStation implements Actor {
 				dispatch();
 			}
 		}
+		else
 	}
 
 }

@@ -11,7 +11,7 @@ public class ConfigRobot extends ConfigActor {
 		this.chargingPoduID = poduID;
 	}
 
-	public String getChargingPoduID() {
+	][public String getChargingPoduID() {
 		return chargingPoduID;
 	}
 
