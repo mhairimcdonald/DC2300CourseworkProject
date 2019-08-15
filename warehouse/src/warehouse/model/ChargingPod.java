@@ -2,7 +2,7 @@ package warehouse.model;
 
 public class ChargingPod implements Actor {
 
-	private int x, y;
+	private Location location;
 	private String UID;
 	private int chargingSpeed;
 	
@@ -25,8 +25,30 @@ public class ChargingPod implements Actor {
 		return chargingSpeed;
 	}
 
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	public String getUID() {
+		return UID;
+	}
+
+	public void setUID(String uID) {
+		UID = uID;
+	}
+
 	public void setChargingSpeed(int chargingSpeed) {
 		this.chargingSpeed = chargingSpeed;
+	}
+
+	@Override
+	public void perform() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
