@@ -24,19 +24,6 @@ public class Simulation {
 		
 		reset();
 	}// start
-
-	public void continueSimulation() {
-
-	}// continueSimulation
-
-	public void dispatch() {
-
-	}// dispatch
-
-	public void generateReport() {
-    
-  }// generate report
-
 	
 	public void continueSimulation() {
 		

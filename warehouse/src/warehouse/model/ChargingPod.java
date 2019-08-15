@@ -14,9 +14,9 @@ public class ChargingPod implements Actor {
 	
 	//This method deals with charging the pods in the simulation. 
 	public void charge(Robot currentRobot) {
-		currentRobot.setCharge(currentRobot.getCharge() + chargingSpeed);
-		if (currentRobot.getCharge()> currentRobot.getMaxCharge()) {
-			currentRobot.setCharge(currentRobot.getMaxCharge);//Probably a better way of dealing with max charge
+		currentRobot.setCurrentCharge(currentRobot.getCurrentCharge() + chargingSpeed);
+		if (currentRobot.getCurrentCharge()> currentRobot.getMaxCharge()) {
+			currentRobot.setCurrentCharge(currentRobot.getMaxCharge());//Probably a better way of dealing with max charge
 		}
 		
 	}//charge
