@@ -26,6 +26,7 @@ public class Simulation {
 		reset();
 	}// start
 
+
 	public void continueSimulation() {
 		tickCounter++;
 		for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
@@ -41,6 +42,7 @@ public class Simulation {
 	public void generateReport() {
     
   }// generate report
+
 	
 	public void start() {
 		

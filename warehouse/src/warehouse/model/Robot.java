@@ -90,6 +90,7 @@ public class Robot implements Actor {
 		//Robot takes item when it detects shelf it was seeking?
 	}//take
 
+
 	@Override
 	public void perform() {
 		//positon of robot
@@ -112,5 +113,6 @@ public class Robot implements Actor {
 			}
 		}
 	}
+
 	
 }
