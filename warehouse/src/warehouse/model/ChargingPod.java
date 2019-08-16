@@ -45,7 +45,7 @@ public class ChargingPod implements Actor {
 	public void tick(LinkedList<Robot> robots) {
 		for(Robot robot: robots) {
 			Location robotLocation = robot.getLocation();
-			if((robotLocation == this.getLocation()) && (this.getMatchingRobot().getUID() == robot.getUID())) {
+			if((robotLocation == this.getLocation()) && (this.getMatchingRobot() == robot)) {
 				charge(robot);
 			}
 		}

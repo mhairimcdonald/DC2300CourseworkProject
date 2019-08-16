@@ -177,9 +177,9 @@ class RobotTests {
 		Location l2 = createLocation(0, 1);
 
 		
-		HashMap<Location, ArrayList<Actor>> mapState = new HashMap<Location, ArrayList<Actor>>();
+		HashMap<Location, LinkedList<Actor>> mapState = new HashMap<Location, LinkedList<Actor>>();
 		
-		ArrayList<Actor> ar1 = new ArrayList<Actor>();
+		LinkedList<Actor> ar1 = new LinkedList<Actor>();
 		Robot r1 = new Robot();
 		r1.setLocation(l1);
 		Robot r2 = new Robot();
