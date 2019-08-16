@@ -93,6 +93,8 @@ public class Simulation {
 	public void continueSimulation() {
 		tickCounter++;
 		while(running) {
+			Boolean finished = false;
+			Boolean allDispatched = true;
 			for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
 				Actor actor = iter.next();
 				switch(actor.getClass().getCanonicalName()) {
@@ -114,10 +116,16 @@ public class Simulation {
 				case "PackingStation":{
 					Order nextOrder = orders.getFirst();
 					((PackingStation)actor).tick(robots);
+					if(((PackingStation)actor).getCurrentOrder() != null) {
+						allDispatched = false;
+					};
 				}// case PackingStation
 				default:{}//default
 				
 				}//switch
+				if(orders.isEmpty() && allDispatched) {
+					stopString = "The simulation is complete with: " + tickCounter;
+				}
 			}//for
 		warehouse = updateWarehouse;
 		updateWarehouse.setWarehouse(updateWarehouse.clearRobots());
