@@ -17,7 +17,6 @@ public class Simulation {
 	private List<ConfigOrder> configOrders;
 	private LinkedList<Actor> actors;
 	private List<ConfigActor> configActors;
-	private List<Actor> newActors;
 	private LinkedList<Robot> robots;
 	private Warehouse warehouse;
 	private HashMap<Location, LinkedList<Actor>> mapState;
@@ -127,6 +126,8 @@ public class Simulation {
 
 	public void continueSimulation() {
 		while(running) {
+			Boolean finished = false;
+			Boolean allDispatched = true;
 			for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
 				Actor actor = iter.next();
 				if (actor instanceof Robot) {
@@ -143,6 +144,7 @@ public class Simulation {
 					}
 				} else if ( actor instanceof ChargingPod) {
 					((ChargingPod)actor).tick(robots);
+
 				} else if ( actor instanceof PackingStation) {
 					if (!orders.isEmpty()) {
 						Order nextOrder = orders.getFirst();
@@ -154,6 +156,12 @@ public class Simulation {
 					
 				} else {
 					System.out.println("Other!");
+
+				}
+				if(orders.isEmpty() && allDispatched) {
+					stopString = "The simulation is complete with: " + tickCounter;
+					running = false;
+
 				}
 			}//for
 		warehouse = updateWarehouse;
@@ -205,21 +213,7 @@ public class Simulation {
 		actors.clear();
 		warehouse.clear();
 		updateWarehouse.clear();
-		populate(warehouse);
 	}
 	
-	public void populate(Warehouse w) {
-		warehouse.clear();
-		for(int i = 0; i < w.getWidth();i++) {
-			//Loop through the columns
-			for (int j = 0; i < w.getHeight();j++) {
-				//Loop through the rows.
-				/*For each cell, check whether there is an 
-				 Actor that should be assigned there. */
-				//Add actor to the Warehouse in the appropriate location.
-				
-			}
-		}
-	}
 	
 }

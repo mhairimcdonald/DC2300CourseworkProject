@@ -3,7 +3,6 @@ package warehouse.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-
 import warehouse.io.configActors.ConfigActor;
 import warehouse.model.path.PathMapper;
 
@@ -38,6 +37,13 @@ public class Robot implements Actor {
 		this.UID = uID;
 		this.destinations = null;
 		this.currentDestination = null;
+		this.item = false;
+		this.isCharging = false;
+		this.hasOrder = false;
+		this.orderReady = false;
+		this.destinations = null;
+		this.currentDestination = null;
+		this.order = null;
 	}
   
   //basic constructor
@@ -51,6 +57,8 @@ public class Robot implements Actor {
 		packingStationLocation = null;
 		
 	}
+	
+	
 	
 	/*
 	public void setDestinations(Order order, Warehouse warehouse) {
@@ -75,6 +83,22 @@ public class Robot implements Actor {
 		}
 	}
 	*/
+
+	public boolean isHasOrder() {
+		return hasOrder;
+	}
+
+	public void setHasOrder(boolean hasOrder) {
+		this.hasOrder = hasOrder;
+	}
+
+	public boolean isItem() {
+		return item;
+	}
+
+	public void setDestinations(LinkedList<Location> destinations) {
+		this.destinations = destinations;
+	}
 
 	public LinkedList<Location> getDestinations() {
 		return destinations;
