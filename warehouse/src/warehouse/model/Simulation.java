@@ -1,6 +1,7 @@
 package warehouse.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Simulation {
 	private List<Actor> newActors;
 	private ArrayList<Robot> robots;
 	private Warehouse warehouse;
+	private HashMap<Location, ArrayList<Actor>> mapState;
 	private Warehouse updateWarehouse;
 	private int step;
 	private boolean running = false;
@@ -80,8 +82,8 @@ public class Simulation {
 			
 			}//switch
 		}//for Loop
-		//newActors = new ArrayList<Actor>();
 		warehouse = new Warehouse(width, height);
+		warehouse.setWarehouse(actors);
 		updateWarehouse = new Warehouse(width, height);
 		
 		reset();

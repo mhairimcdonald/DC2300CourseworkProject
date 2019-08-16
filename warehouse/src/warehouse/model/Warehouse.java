@@ -2,6 +2,7 @@ package warehouse.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Warehouse {
 
@@ -21,6 +22,57 @@ public class Warehouse {
 		this.stats = new WarehouseStats();
 	}
 	
+	
+	
+	public WarehouseStats getStats() {
+		return stats;
+	}
+
+
+
+	public void setStats(WarehouseStats stats) {
+		this.stats = stats;
+	}
+
+
+
+	public HashMap<Location, ArrayList<Actor>> getWarehouse() {
+		return warehouse;
+	}
+
+
+
+	public void setWarehouse(LinkedList<Actor> actors, int height, int width) {
+		for(int hIndex = 0; hIndex < height; hIndex++) {
+			for(int wIndex = 0; wIndex < width; wIndex++) {
+				Location mapLoc = new Location(wIndex, hIndex);
+				warehouse.put(mapLoc, null);
+			}
+		}
+		
+		for(Actor actor: actors) {
+			Location loc = actor.getLocation();
+			ArrayList<Actor> currentLocActors = new ArrayList<>();
+			currentLocActors.addAll(warehouse.get(loc));
+			currentLocActors.add(actor);
+			warehouse.put(loc, currentLocActors);
+		}
+	}
+
+
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+
+
 	//Clear the warehouse of all Actors
 	public void clear() {
 		warehouse.clear();
