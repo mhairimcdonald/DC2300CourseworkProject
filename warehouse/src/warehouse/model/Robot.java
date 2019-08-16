@@ -181,6 +181,8 @@ public class Robot implements Actor {
 		this.isCharging = isCharging;
 	}
 	
+
+
 	public boolean isOrderReady() {
 		return orderReady;
 	}
@@ -217,6 +219,7 @@ public class Robot implements Actor {
 	}
 
 	public void tick() {}
+
 	
 	public void parseOrder(Order o, HashMap<Location, LinkedList<Actor>> mapState) {
 		//Get the UIDs of the Storage Shelves
@@ -429,6 +432,11 @@ public class Robot implements Actor {
 
 	@Override
 	public void perform() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void tick(HashMap<Location, ArrayList<Actor>> mapState) {
 		// TODO Auto-generated method stub
 		
 	}

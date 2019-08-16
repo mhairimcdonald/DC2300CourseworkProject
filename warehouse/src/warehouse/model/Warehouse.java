@@ -24,6 +24,12 @@ public class Warehouse {
 	
 	
 	
+	public void setWarehouse(HashMap<Location, ArrayList<Actor>> warehouse) {
+		this.warehouse = warehouse;
+	}
+
+
+
 	public WarehouseStats getStats() {
 		return stats;
 	}
@@ -109,4 +115,21 @@ public class Warehouse {
 	public void operate() {
 		//not sure if needed, might need method to create the actual warehouse just
 	}//operate
+	
+	public HashMap<Location,ArrayList<Actor>> clearRobots() {
+		HashMap<Location,ArrayList<Actor>> tempMap = null;
+		for(int hIndex = 0; hIndex < height; hIndex++) {
+			for(int wIndex = 0; wIndex < width; wIndex++) {
+				Location mapLoc = new Location(wIndex, hIndex);
+				ArrayList<Actor> actorsInLoc = warehouse.get(mapLoc);
+				for(Actor actor: actorsInLoc) {
+					if(actor instanceof Robot) {
+						actorsInLoc.remove(actor);
+					}
+				}
+				tempMap.put(mapLoc, actorsInLoc);
+			}
+		}
+		return tempMap;
+	}
 }

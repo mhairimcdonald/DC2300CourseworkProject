@@ -13,7 +13,7 @@ public class Simulation {
 	private int tickCounter = 0;
 	private LinkedList<Order> orders;
 	private List<ConfigOrder> configOrders;
-	private List<Actor> actors;
+	private LinkedList<Actor> actors;
 	private List<ConfigActor> configActors;
 	private List<Actor> newActors;
 	private ArrayList<Robot> robots;
@@ -26,6 +26,7 @@ public class Simulation {
 	//public static PathFinding Variable robots will use to work out next location/ distance to certain locations
 
 	public void start(ConfigFile cf) {
+		running = true;
 		int width = cf.getWidth();
 		int height = cf.getHeight();
 		warehouse = new Warehouse(height, width);
@@ -82,8 +83,9 @@ public class Simulation {
 			}//switch
 		}//for Loop
 		warehouse = new Warehouse(width, height);
-		warehouse.setWarehouse(actors);
+		warehouse.setWarehouse(actors, width, height);
 		updateWarehouse = new Warehouse(width, height);
+		updateWarehouse.setWarehouse(actors, height, width);
 		
 		reset();
 	}// start
@@ -91,16 +93,28 @@ public class Simulation {
 
 	public void continueSimulation() {
 		tickCounter++;
-		for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
-			Actor actor = iter.next();
-			if(actor instanceof PackingStation) {
-				Boolean removeOrder = ((PackingStation)actor).tick(robots, orders.getFirst(), warehouse);
-				if (removeOrder == true) { orders.removeFirst();}
-			}else {
-				actor.tick();
-			}
-			
+		while(running) {
+			for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
+				Actor actor = iter.next();
+				switch(actor.getClass().getCanonicalName()) {
+				case "Robot":{
+					((Robot)actor).tick(this.updateWarehouse.getWarehouse());
+				}// case Robot
+				case "ChargingPod":{
+					((ChargingPod)actor).tick(robots);
+				}//case ChargingPod
+				case "PackingStation":{
+					Order nextOrder = orders.getFirst();
+					((PackingStation)actor).tick(robots, nextOrder, updateWarehouse);
+				}// case PackingStation
+				default:{}//default
+				
+				}//switch
+			}//for
+		warehouse = updateWarehouse;
+		updateWarehouse.setWarehouse(updateWarehouse.clearRobots());
 		}
+		
 	}// continueSimulation
 
 	public void dispatch() {
