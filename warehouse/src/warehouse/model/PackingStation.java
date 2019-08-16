@@ -1,6 +1,7 @@
 package warehouse.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class PackingStation implements Actor {
 
@@ -25,7 +26,7 @@ public class PackingStation implements Actor {
 		this.ticksLeft = -1;
 	}
 	
-	public void tick(ArrayList<Robot> robots) {
+	public void tick(LinkedList<Robot> robots) {
 		if (currentOrder == null) {return;} //If no order, wait;
 		if (ticksLeft <= 0) {//If you've completed your job
 			ticksLeft = -1;
