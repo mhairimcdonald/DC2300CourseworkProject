@@ -10,6 +10,10 @@ public class Location {
 		this.col = col;
 	}
 	
+	public Location() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String toString() {
 		return row+","+col;
 	}
@@ -24,6 +28,14 @@ public class Location {
 	
 	public int getCol() {
 		return col;
+	}
+	
+	public void setRow(int i) {
+		row = i;
+	}
+	
+	public void setCol(int i) {
+		col = i;
 	}
 
 }
