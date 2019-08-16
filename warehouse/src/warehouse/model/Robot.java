@@ -148,11 +148,6 @@ public class Robot implements Actor {
 	public void take() {
 		//Robot takes item when it detects shelf it was seeking?
 	}//take
-
-
-	public Location tick(Location loc) {
-		
-	}
 	
 	@Override
 	public void tick() {
@@ -178,6 +173,11 @@ public class Robot implements Actor {
 	}
 
 	private void crash() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void tick(HashMap<Location, ArrayList<Actor>> mapState) {
 		// TODO Auto-generated method stub
 		
 	}
