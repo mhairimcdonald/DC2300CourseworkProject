@@ -112,7 +112,7 @@ public class FileLoader {
 				out += "|";
 				i++;
 			} 
-			System.out.println("Order:"+co.getuID()+" has pieces at Storage Shelves: |"+out);
+			System.out.println("Order:"+co.getTicksToPack()+" has pieces at Storage Shelves: |"+out);
 		}
 		return false;
 	}
@@ -147,6 +147,7 @@ public class FileLoader {
 		r.setChargingPoduID(s.get(0));
 		r.setRow(Integer.parseInt(s.get(2)));
 		r.setCol(Integer.parseInt(s.get(3)));
+		r.setLocation(r.getRow(), r.getCol());
 		
 		return r;
 	}
@@ -161,6 +162,7 @@ public class FileLoader {
 		cs.setuID(s.get(0));
 		cs.setRow(Integer.parseInt(s.get(1)));
 		cs.setCol(Integer.parseInt(s.get(2)));
+		cs.setLocation(cs.getRow(), cs.getCol());
 		
 		return cs;
 	}
@@ -175,6 +177,7 @@ public class FileLoader {
 		cp.setuID(s.get(0));
 		cp.setRow(Integer.parseInt(s.get(1)));
 		cp.setCol(Integer.parseInt(s.get(2)));
+		cp.setLocation(cp.getRow(), cp.getCol());
 		
 		return cp;
 	}
@@ -187,7 +190,7 @@ public class FileLoader {
 		 */
 		
 		ConfigOrder cp = new ConfigOrder();
-		cp.setuID(s.get(0));
+		cp.setTicksToPack(s.get(0));
 		int i = 1;
 		ArrayList<String> storageUIDs = new ArrayList<String>();
 		while (i<s.size()){
