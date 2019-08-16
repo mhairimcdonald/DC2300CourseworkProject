@@ -1,5 +1,6 @@
 package warehouse.model.estimation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import warehouse.model.Actor;
@@ -15,11 +16,11 @@ public class Tester {
 		ManhattanCostEstimator m = new ManhattanCostEstimator();
 		PathMapper pm = new PathMapper();
 		
-		Location l1 = createLocation(0, 0);
+		Location l1 = createLocation(0, 0); //adjec
 		Location l2 = createLocation(0, 1);
-		Location l3 = createLocation(0, 2);
+		Location l3 = createLocation(0, 2); //adjec
 		Location l4 = createLocation(1, 0);
-		Location l5 = createLocation(1, 1);
+		Location l5 = createLocation(1, 1); //adjec
 		Location l6 = createLocation(1, 2);
 		Location l7 = createLocation(2, 0);
 		Location l8 = createLocation(2, 1);
@@ -27,6 +28,16 @@ public class Tester {
 		Actor a = new Robot();
 		Actor b = null;
 		Actor c = new PackingStation();
+		ArrayList<Actor> aa = new ArrayList<Actor>(); //Has just robot
+		ArrayList<Actor> ab = new ArrayList<Actor>(); //Has no robot
+		ArrayList<Actor> ac = new ArrayList<Actor>(); //Has robot and something else
+		aa.add(a);
+		ab.add(b);
+		ab.add(c);
+		ac.add(a);
+		ac.add(c);
+		
+		HashMap<Location, ArrayList<Actor>> baseMap = new HashMap<Location, ArrayList<Actor>>();
 		HashMap<Location, Actor> map = new HashMap<Location, Actor>();
 		
 		Location curr = l2;
@@ -35,22 +46,22 @@ public class Tester {
 		System.out.println("Destination["+dest.getCol()+","+dest.getRow()+"]");
 		System.out.println("Current["+curr.getCol()+","+curr.getRow()+"]");
 		
-		map.put(l1, a);
-		map.put(l2, b);
-		map.put(l3, a);
-		map.put(l4, a);
-		map.put(l5, a);
-		map.put(l6, c);
-		map.put(l7, c);
-		map.put(l8, c);
-		map.put(l9, b);
+		baseMap.put(l1, aa); //adjec
+		baseMap.put(l2, ab);
+		baseMap.put(l3, ab); //adjec
+		baseMap.put(l4, ac);
+		baseMap.put(l5, ac); //adjec
+		baseMap.put(l6, ac);
+		baseMap.put(l7, ac);
+		baseMap.put(l8, ac);
+		baseMap.put(l9, ab);
 		
-		HashMap<Location, Integer> valueMap = m.getCostMap(dest, map);
+		HashMap<Location, Integer> valueMap = m.getCostMap(dest, baseMap);
 
 		pm.setValueMap(valueMap);
 		
 		//Initialise your PM
-		pm.setCurrMap(map);
+		pm.setMapState(baseMap);
 		
 		Location[] surrLoc = pm.getSurroundingLocations(curr);
 		System.out.println("Current Location["+curr.getCol()+","+curr.getRow()+"]");

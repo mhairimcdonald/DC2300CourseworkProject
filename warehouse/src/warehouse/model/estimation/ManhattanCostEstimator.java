@@ -1,5 +1,6 @@
 package warehouse.model.estimation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class ManhattanCostEstimator implements ICostEstimation {
 		return 0;
 	}
 	
-	public HashMap<Location, Integer> getCostMap(Location dest, HashMap<Location, Actor> map){
+	public HashMap<Location, Integer> getCostMap(Location dest, HashMap<Location, ArrayList<Actor>> map){
 		HashMap<Location, Integer> mapBreakdown = new HashMap<Location, Integer>();
 		//Coordinates for destination
 		int destXPos = dest.getCol();

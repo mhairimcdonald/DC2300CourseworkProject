@@ -1,6 +1,7 @@
 package warehouse.model.path;
 
 import java.awt.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -11,25 +12,16 @@ import warehouse.model.estimation.*;
 
 public class PathMapper {
 	
-	private LinkedList<Location> positions;
 	private HashMap<Location, Integer> valueMap;
-	private HashMap<Location, Actor> currMap;
-	private HashMap<Location, HashMap<Location, Actor>> mapState;
+	private HashMap<Location, ArrayList<Actor>> mapState;
+	
+	public PathMapper(HashMap<Location, ArrayList<Actor>> mapState ) {
+		valueMap = new HashMap<Location, Integer>();
+		mapState = new HashMap<Location, ArrayList<Actor>>();
+	}
 	
 	public PathMapper() {
-		positions = new LinkedList<Location>();
-		valueMap = new HashMap<Location, Integer>();
-		currMap = new HashMap<Location, Actor>();
-		mapState = new HashMap<Location, HashMap<Location, Actor>>();
-	}
-
-	public LinkedList<Location> getPositions() {
-		return positions;
-	}
-
-	//Used in Simulation to setup the Pathfinding
-	public void setPositions(LinkedList<Location> queueOfPositions) {
-		this.positions = queueOfPositions;
+		
 	}
 	
 	public HashMap<Location, Integer> getValueMap() {
@@ -40,37 +32,17 @@ public class PathMapper {
 		this.valueMap = map;
 	}
 	
+	
 	public void createMap(LinkedList<Location> l) {
 		
 	}
 
-	public HashMap<Location, HashMap<Location, Actor>> getMapState() {
+	public HashMap<Location, ArrayList<Actor>> getMapState() {
 		return mapState;
 	}
 
-	public void setMapState(HashMap<Location, HashMap<Location, Actor>> mapState) {
+	public void setMapState(HashMap<Location, ArrayList<Actor>> mapState) {
 		this.mapState = mapState;
-	}
-	
-	public void getNextLocation(Location currentLocation, Location destination) {
-		ManhattanCostEstimator est = new ManhattanCostEstimator();
-		//2. Create shortest distance from dest map by value
-		setValueMap(est.getCostMap(destination, currMap));
-		//3. Add destination to end of list
-		positions.add(destination);
-		//4. Set table cell of destination to 0
-		valueMap.put(destination, 0);
-		//5. While the queue is not empty
-		while (!positions.isEmpty()) {
-			//a) Retrieve and remove first Location from queue.
-			Location pos = positions.getFirst();
-			positions.removeFirst();
-			/*
-			 * b) Retrieve the table cell for that position
-			 * Table is stored as HashMap<Location, <Actor>> in Warehouse
-			 */
-		
-		}
 	}
 	
 	public Location getNextNearest(Location current){
@@ -159,20 +131,15 @@ public class PathMapper {
 		}
 		return surr;
 	}
-
-	public HashMap<Location, Actor> getCurrMap() {
-		return currMap;
-	}
-
-	public void setCurrMap(HashMap<Location, Actor> currMap) {
-		this.currMap = currMap;
-	}
 	
 	public void setObstructions() {
-		for (Location l : currMap.keySet()) { //Iterate over all Locations in the currentMap
-			if (currMap.get(l) instanceof Robot) { //
-				setObstructed(l);
+		for (Location l : mapState.keySet()) { //Iterate over all Locations in the currentMap
+			for (Actor a : mapState.get(l)) {
+				if (a instanceof Robot) { //
+					setObstructed(l);
+				}
 			}
+			
 		}
 		
 	}
