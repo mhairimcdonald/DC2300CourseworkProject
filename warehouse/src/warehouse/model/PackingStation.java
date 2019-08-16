@@ -4,93 +4,68 @@ import java.util.ArrayList;
 
 public class PackingStation implements Actor {
 
-	private int noOfItems;
-	private int ticksToPackItems, ticksToDispatch, ticksPacking;
 	private Location location;
 	private String UID;
 	private Order currentOrder;
+	private int ticksLeft;
+	private Robot robot;
+	private boolean haveItems;
 	
 	public PackingStation(Location location, String uID) {
 		super();
-		this.noOfItems = 0;
-		this.ticksToPackItems = ticksToPackItems;
-		this.ticksToDispatch = 0;
-		this.ticksPacking = 0;
 		this.location = location;
 		this.currentOrder = null;
 		UID = uID;
 	}
 
-
-	
-	public int getNoOfItems() {
-		return noOfItems;
-	}
-
-	public void setNoOfItems(int noOfItems) {
-		this.noOfItems = noOfItems;
-	}
-
-	public int getTicksToPackItems() {
-		return ticksToPackItem;
-	}
-
-	public void setTicksToPackItems(int ticksToPackItems) {
-		this.ticksToPackItems = ticksToPackItems;
-	}
-
-	public PackingStation(int noOfItems, int ticksToPackItem, int ticksToDispatch, int ticksPacking, Location location,
-			String uID) {
-		super();
-		this.noOfItems = noOfItems;
-		this.ticksToPackItems = ticksToPackItem;
-		this.ticksToDispatch = ticksToDispatch;
-		this.ticksPacking = ticksPacking;
-		this.location = location;
-		UID = uID;
-	}
-
-	//Basic Constructor
 	public PackingStation() {
-		// TODO Auto-generated constructor stub
+		this.haveItems = false;
+		this.currentOrder = null;
+		this.robot = null;
+		this.ticksLeft = -1;
 	}
-
-
-
-	public void ask() {
+	
+	public void tick(ArrayList<Robot> robots) {
+		if (currentOrder == null) {return;} //If no order, wait;
+		if (ticksLeft <= 0) {//If you've completed your job
+			ticksLeft = -1;
+			currentOrder = null;
+			robot = null;
+			haveItems = false;
+		}
+		if (robot == null) { //If no robot, search robots for a free robot
+			for (Robot r : robots) {
+				if (r.getOrder()==null) {
+					r.setOrder(currentOrder);
+					robot = r;
+					break;
+				}
+			}
+		} else {//If you have a robot, check if they're in your place.
+			if (robot.getLocation()==location) {
+				robot.setOrder(null);
+				haveItems = true;
+			}
+		}
+		if (haveItems) {
+			ticksLeft -= 1;
+		}
 		
-	}//ask
-	
-	public void dispatch() {
-		//add completed order to report
-		noOfItems = 0;
-		ticksToDispatch = 0;
-		ticksPacking = 0;
-		
-	}//dispatch
-	
-	public void idle() {
-		
-	}//idle
-	
-	public void pack(Robot robot) {
-		noOfItems = robot.get
-	}//pack
-	
-	public int getTicksToDispatch() {
-		return ticksToDispatch;
 	}
-
-	public void setTicksToDispatch(int ticksToDispatch) {
-		this.ticksToDispatch = ticksToDispatch;
-	}
-
-	public int getTicksPacking() {
-		return ticksPacking;
-	}
-
-	public void setTicksPacking(int ticksPacking) {
-		this.ticksPacking = ticksPacking;
+	
+	/*
+	 * If this packing station needs an order,
+	 * accept the order and return true, otherwise
+	 * return false
+	 */
+	public boolean needOrder(Order o) {
+		if (currentOrder==null) {
+			currentOrder = o;
+			ticksLeft = o.getTicksToPack();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public Location getLocation() {
@@ -109,41 +84,9 @@ public class PackingStation implements Actor {
 		UID = uID;
 	}
 
-	public void receive() {
-		
-	}//receive
-
-	public Boolean tick(ArrayList<Robot> robots, Order nextOrder, Warehouse warehouse) {
-		// TODO Auto-generated method stub
-		if(noOfItems > 0) {
-			ticksPacking++;
-			if(ticksPacking == ticksToDispatch) {
-				dispatch();
-			}
-			return false;
-		}
-		else if(currentOrder != null) {
-				
-			return false;
-		}//else if
-		else {
-			currentOrder = nextOrder;
-			LinkedList<>
-			for(Robot currentRobot: robots) {
-				if(currentRobot.getDestinations().getFirst() == null) {
-					currentRobot.setDestinations(currentOrder, warehouse);
-				}
-			}
-			return true;
-		}//else
-	}//
-
-
-
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
