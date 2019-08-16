@@ -1,6 +1,5 @@
 package warehouse.model;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PackingStation implements Actor {
@@ -17,6 +16,41 @@ public class PackingStation implements Actor {
 		this.location = location;
 		this.currentOrder = null;
 		UID = uID;
+		this.ticksLeft = 0;
+		this.robot = null;
+		this.haveItems = false;
+	}
+
+	public Order getCurrentOrder() {
+		return currentOrder;
+	}
+
+	public void setCurrentOrder(Order currentOrder) {
+		this.currentOrder = currentOrder;
+	}
+
+	public int getTicksLeft() {
+		return ticksLeft;
+	}
+
+	public void setTicksLeft(int ticksLeft) {
+		this.ticksLeft = ticksLeft;
+	}
+
+	public Robot getRobot() {
+		return robot;
+	}
+
+	public void setRobot(Robot robot) {
+		this.robot = robot;
+	}
+
+	public boolean isHaveItems() {
+		return haveItems;
+	}
+
+	public void setHaveItems(boolean haveItems) {
+		this.haveItems = haveItems;
 	}
 
 	public PackingStation() {
