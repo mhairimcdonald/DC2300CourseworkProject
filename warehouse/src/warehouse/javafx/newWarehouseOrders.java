@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -111,8 +113,31 @@ public class newWarehouseOrders {
 	@FXML
 	public void finishButtonAction() {
 		
+		if (noOfOrders == 0) {
+			//If there are no orders, Alert and return to stop progress
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("No Orders");
+			alert.setHeaderText("You must include at least one Order.");
+			alert.showAndWait();
+			return;
+		}
+		
 		//For each order the user has made
 		for (NewOrder o : newOrders) {
+			/*
+			 * If one of the orders are invalid, error and return to
+			 * prevent creation of ConfigFile until all orders
+			 * have input
+			 */
+			if (!checkWhetherOrderValid(o)) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Invalid Order");
+				alert.setHeaderText("All orders must include:\n"
+						+ "TicksToPack: A number between 1-99\n"
+						+ "At least one Storage Shelf checked.");
+				alert.showAndWait();
+				return;
+			}
 			ConfigOrder co = new ConfigOrder();
 			/*
 			 * Transform the NewOrder into a ConfigOrder then
@@ -126,7 +151,36 @@ public class newWarehouseOrders {
 		 *  to the original Window.
 		 */
 		WarehouseController.primaryConfigFile = cf;
+		//Set the configValid to be true so that it loads.
+		WarehouseController.configValid = true;
 		closeButtonAction();
+	}
+	
+	public boolean checkWhetherOrderValid(NewOrder o) {
+		/*
+		 * Need to check whether there is at least one checkBox ticked,
+		 * and whether the order has any text entered in it's textbox.
+		 * If both are true, return true, else return false;
+		 */
+		boolean atLeastOneCheckBox = false;
+		boolean someTextEntered = false;
+		for (CheckBox cb : o.getBoxes()) {
+			if (cb.isSelected()) {
+				atLeastOneCheckBox = true;
+			}
+		}
+		if (!o.getTickNo().getText().isEmpty()) {
+			//Check that the number being entered is actually a number
+			if (removeSpecialCharactersSetToInt(o.getTickNo().getText()) != -1) {
+				someTextEntered = true;
+			}
+		}
+		
+		if (atLeastOneCheckBox && someTextEntered) {
+			
+			return true;
+		}
+		return false;
 	}
 	
 	public ConfigOrder writeOrder(NewOrder o) {
@@ -140,10 +194,8 @@ public class newWarehouseOrders {
 		 * Then return the ConfigOrder
 		 */
 		ConfigOrder c = new ConfigOrder();
+		//This has already been validated before being set here.
 		String s = o.getTickNo().getText().replaceAll("[^0-9]", "");
-		if (s==null) {
-			//alert
-		}
 		c.setTicksToPack(s);
 		for (CheckBox cb : o.getBoxes()) {
 			if (cb.isSelected()) {
@@ -154,7 +206,7 @@ public class newWarehouseOrders {
 	}
 	
 	public int removeSpecialCharactersSetToInt(String s) {
-		int i = 0;
+		int i = -1;
 		try {
 			i = Integer.parseInt(s);
 		} catch (NumberFormatException e) {
