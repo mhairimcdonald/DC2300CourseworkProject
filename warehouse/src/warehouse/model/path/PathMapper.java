@@ -13,20 +13,20 @@ import warehouse.model.estimation.*;
 public class PathMapper {
 	
 	private HashMap<Location, Integer> valueMap;
-	private HashMap<Location, ArrayList<Actor>> mapState;
+	private HashMap<Location, LinkedList<Actor>> mapState;
 	
 	public PathMapper() {
 		this.valueMap = new HashMap<Location, Integer>();
-		this.mapState = new HashMap<Location, ArrayList<Actor>>();
+		this.mapState = new HashMap<Location, LinkedList<Actor>>();
 	}
 	
-	public PathMapper(HashMap<Location, ArrayList<Actor>> mapState, Location destination) {
+	public PathMapper(HashMap<Location, LinkedList<Actor>> mapState, Location destination) {
 		this.mapState = mapState;
 		ManhattanCostEstimator m = new ManhattanCostEstimator();
 		this.valueMap = m.getCostMap(destination, mapState);
 	}
 	
-	public void setupMapper(HashMap<Location, ArrayList<Actor>> mapState, Location destination) {
+	public void setupMapper(HashMap<Location, LinkedList<Actor>> mapState, Location destination) {
 		this.mapState = mapState;
 		ManhattanCostEstimator m = new ManhattanCostEstimator();
 		this.valueMap = m.getCostMap(destination, mapState);
@@ -46,11 +46,11 @@ public class PathMapper {
 		
 	}
 
-	public HashMap<Location, ArrayList<Actor>> getMapState() {
+	public HashMap<Location, LinkedList<Actor>> getMapState() {
 		return mapState;
 	}
 
-	public void setMapState(HashMap<Location, ArrayList<Actor>> mapState) {
+	public void setMapState(HashMap<Location, LinkedList<Actor>> mapState) {
 		this.mapState = mapState;
 	}
 	
@@ -65,7 +65,6 @@ public class PathMapper {
 				break;
 			}
 			int locValue = valueMap.get(l);
-			System.out.println("Cell["+l.getCol()+","+l.getRow()+"]:- Value:"+locValue);
 			/*
 			 * Check for lowest value and store the 
 			 * Location with the lowest value
@@ -119,7 +118,7 @@ public class PathMapper {
 		for (Location l : valueMap.keySet()) {
 			if (l.getCol() == currXPos && (l.getRow() == currYPos+1 || l.getRow() == currYPos-1)) {
 				if (i<4) {
-					System.out.println("Adding ["+l.getCol()+","+l.getRow()+"]");
+					System.out.println("Surround: ["+l.getCol()+","+l.getRow()+"]");
 					surr[i] = l;
 					i++;
 				} else {
@@ -129,7 +128,7 @@ public class PathMapper {
 				
 			} else if (l.getRow() == currYPos && (l.getCol() == currXPos+1 || l.getCol() == currXPos-1)) {
 				if (i<4) {
-					System.out.println("Adding ["+l.getCol()+","+l.getRow()+"]");
+					System.out.println("Surround: ["+l.getCol()+","+l.getRow()+"]");
 					surr[i] = l;
 					i++;
 				} else {

@@ -46,7 +46,7 @@ public class ManhattanCostEstimator implements ICostEstimation {
 		return 0;
 	}
 	
-	public HashMap<Location, Integer> getCostMap(Location dest, HashMap<Location, ArrayList<Actor>> map){
+	public HashMap<Location, Integer> getCostMap(Location dest, HashMap<Location, LinkedList<Actor>> map){
 		HashMap<Location, Integer> mapBreakdown = new HashMap<Location, Integer>();
 		//Coordinates for destination
 		int destXPos = dest.getCol();
@@ -63,8 +63,6 @@ public class ManhattanCostEstimator implements ICostEstimation {
 			
 			
 			int cost = Math.abs(ydiff) + Math.abs(xdiff);
-			
-			System.out.println("Cell["+xpos+","+ypos+"]:- Value:"+cost);
 			
 			
 			mapBreakdown.put(l, cost);

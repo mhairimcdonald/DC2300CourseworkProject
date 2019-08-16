@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import org.junit.jupiter.api.Test;
 
@@ -52,9 +53,6 @@ class RobotTests {
 
 	@Test
 	void tickTestMoveTowardsDest() {
-		ManhattanCostEstimator m = new ManhattanCostEstimator();
-		PathMapper pm = new PathMapper();
-		
 		Location l1 = createLocation(0, 0); //Start
 		Location l2 = createLocation(0, 1); //adjec
 		Location l3 = createLocation(0, 2);
@@ -68,9 +66,9 @@ class RobotTests {
 		Location destination = l8;
 		Location location = l1;
 		
-		HashMap<Location, ArrayList<Actor>> mapState = new HashMap<Location, ArrayList<Actor>>();
+		HashMap<Location, LinkedList<Actor>> mapState = new HashMap<Location, LinkedList<Actor>>();
 		
-		ArrayList<Actor> ar1 = new ArrayList<Actor>();
+		LinkedList<Actor> ar1 = new LinkedList<Actor>();
 		Actor a = new PackingStation();
 		ar1.add(a);
 		
@@ -95,6 +93,7 @@ class RobotTests {
 		r.setMaxCharge(20);
 		r.setCurrentCharge(r.getMaxCharge());
 		r.addDestinationsLast(destination);
+		r.setOrder(new Order());
 		r.setCurrentDestination(destination);
 		r.setItem(false);
 		r.setLocation(location);
@@ -103,7 +102,7 @@ class RobotTests {
 		cp.setLocation(location);
 		cp.setChargingSpeed(2);
 		
-		Location l = r.tick(pm, mapState);
+		Location l = r.tick(mapState);
 		
 		assertNotNull(l);
 		assertEquals(l.getRow(), 1);
@@ -111,10 +110,7 @@ class RobotTests {
 	}
 
 	@Test
-	void tickTestLowCharge() {
-		ManhattanCostEstimator m = new ManhattanCostEstimator();
-		PathMapper pm = new PathMapper();
-		
+	void tickTestLowCharge() {	
 		Location l1 = createLocation(0, 0); //Start
 		Location l2 = createLocation(0, 1); //adjec
 		Location l3 = createLocation(0, 2);
@@ -128,9 +124,9 @@ class RobotTests {
 		Location destination = l8;
 		Location location = l1;
 		
-		HashMap<Location, ArrayList<Actor>> mapState = new HashMap<Location, ArrayList<Actor>>();
+		HashMap<Location, LinkedList<Actor>> mapState = new HashMap<Location, LinkedList<Actor>>();
 		
-		ArrayList<Actor> ar1 = new ArrayList<Actor>();
+		LinkedList<Actor> ar1 = new LinkedList<Actor>();
 		Actor a = new PackingStation();
 		ar1.add(a);
 		
@@ -156,6 +152,7 @@ class RobotTests {
 		r.setCurrentCharge(r.getMaxCharge());
 		r.addDestinationsLast(destination);
 		r.setCurrentDestination(destination);
+		r.setOrder(new Order());
 		r.setItem(false);
 		r.setLocation(l3);
 		r.setChargePodLocation(location);
@@ -163,12 +160,15 @@ class RobotTests {
 		cp.setLocation(location);
 		cp.setChargingSpeed(2);
 		
-		Location l = r.tick(pm, mapState);
+		System.out.println("Starting: ["+r.getLocation().getCol()+","+r.getLocation().getRow()+"]");
+		Location l = r.tick(mapState);
 		
 		assertNotNull(l);
 		assertEquals(r.getCurrentDestination(), cp.getLocation());
 		assertEquals(l, l2);
-		assertEquals(l2, r.getLocation());
+		System.out.println("Ending: ["+l.getCol()+","+l.getRow()+"]");
+		assertEquals(l2.getCol(), l.getCol());
+		assertEquals(l2.getRow(), l.getRow());	
 	}
 	
 	@Test
