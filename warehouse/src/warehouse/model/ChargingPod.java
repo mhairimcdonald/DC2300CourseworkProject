@@ -84,6 +84,14 @@ public class ChargingPod implements Actor {
 		this.chargingSpeed = chargingSpeed;
 	}
 
+
+
+	@Override
+	public void perform() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 	

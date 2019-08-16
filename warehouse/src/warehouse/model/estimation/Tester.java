@@ -2,6 +2,7 @@ package warehouse.model.estimation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import warehouse.model.Actor;
 import warehouse.model.Location;
@@ -28,17 +29,16 @@ public class Tester {
 		Actor a = new Robot();
 		Actor b = null;
 		Actor c = new PackingStation();
-		ArrayList<Actor> aa = new ArrayList<Actor>(); //Has just robot
-		ArrayList<Actor> ab = new ArrayList<Actor>(); //Has no robot
-		ArrayList<Actor> ac = new ArrayList<Actor>(); //Has robot and something else
+		LinkedList<Actor> aa = new LinkedList<Actor>(); //Has just robot
+		LinkedList<Actor> ab = new LinkedList<Actor>(); //Has no robot
+		LinkedList<Actor> ac = new LinkedList<Actor>(); //Has robot and something else
 		aa.add(a);
 		ab.add(b);
 		ab.add(c);
 		ac.add(a);
 		ac.add(c);
 		
-		HashMap<Location, ArrayList<Actor>> baseMap = new HashMap<Location, ArrayList<Actor>>();
-		HashMap<Location, Actor> map = new HashMap<Location, Actor>();
+		HashMap<Location, LinkedList<Actor>> baseMap = new HashMap<Location, LinkedList<Actor>>();
 		
 		Location curr = l2;
 		Location dest = l7;
