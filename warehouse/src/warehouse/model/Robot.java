@@ -427,16 +427,14 @@ public class Robot implements Actor {
 	
 	public boolean batteryEmpty() {
 		boolean crashed = false;
+		if ( currentCharge < 0 ) {
+			crashed = true;
+		}
 		return crashed;
 	}
 
 	@Override
 	public void perform() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void tick(HashMap<Location, ArrayList<Actor>> mapState) {
 		// TODO Auto-generated method stub
 		
 	}
