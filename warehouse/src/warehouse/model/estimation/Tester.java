@@ -38,6 +38,7 @@ public class Tester {
 		ac.add(c);
 		
 		HashMap<Location, ArrayList<Actor>> baseMap = new HashMap<Location, ArrayList<Actor>>();
+		HashMap<Location, Actor> map = new HashMap<Location, Actor>();
 		
 		Location curr = l2;
 		Location dest = l7;
