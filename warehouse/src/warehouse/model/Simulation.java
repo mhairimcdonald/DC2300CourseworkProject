@@ -128,6 +128,7 @@ public class Simulation {
 				}//switch
 				if(orders.isEmpty() && allDispatched) {
 					stopString = "The simulation is complete with: " + tickCounter;
+					running = false;
 				}
 			}//for
 		warehouse = updateWarehouse;
