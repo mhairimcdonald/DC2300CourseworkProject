@@ -1,6 +1,7 @@
 package warehouse.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class ChargingPod implements Actor {
 
@@ -41,7 +42,7 @@ public class ChargingPod implements Actor {
 		
 	}//tick
 	
-	public void tick(ArrayList<Robot> robots) {
+	public void tick(LinkedList<Robot> robots) {
 		for(Robot robot: robots) {
 			Location robotLocation = robot.getLocation();
 			if((robotLocation == this.getLocation()) && (this.getMatchingRobot().getUID() == robot.getUID())) {

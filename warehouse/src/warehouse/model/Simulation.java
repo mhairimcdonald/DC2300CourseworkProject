@@ -16,13 +16,13 @@ public class Simulation {
 	private LinkedList<Actor> actors;
 	private List<ConfigActor> configActors;
 	private List<Actor> newActors;
-	private ArrayList<Robot> robots;
+	private LinkedList<Robot> robots;
 	private Warehouse warehouse;
-	private HashMap<Location, ArrayList<Actor>> mapState;
+	private HashMap<Location, LinkedList<Actor>> mapState;
 	private Warehouse updateWarehouse;
-	private int step;
 	private boolean running = false;
 	private ArrayList<String> listOfStorageLocations;
+	private String stopString = null;
 	//public static PathFinding Variable robots will use to work out next location/ distance to certain locations
 
 	public void start(ConfigFile cf) {
@@ -57,7 +57,7 @@ public class Simulation {
 				String poduID = ((ConfigRobot)actor).getChargingPoduID();
 				int chargeSpeed = cf.getChargeSpeed();
 				int capacity = cf.getCapacity();
-				Robot robot = new Robot(poduID, capacity, location, UID);
+				Robot robot = new Robot(poduID, location, capacity, location, UID);
 				ChargingPod chargePod = new ChargingPod(location, poduID, chargeSpeed, robot);
 				actors.add(chargePod);
 				robots.add(robot);
@@ -99,13 +99,22 @@ public class Simulation {
 				switch(actor.getClass().getCanonicalName()) {
 				case "Robot":{
 					((Robot)actor).tick(this.updateWarehouse.getWarehouse());
+					if(((Robot)actor).crash(this.updateWarehouse.getWarehouse())) {
+						Location crashLocation = ((Robot)actor).getLocation();
+						LinkedList<Actor> crashedRobots = mapState.get(crashLocation);
+						stopString = "Robot " + ((Robot)crashedRobots.getFirst()).getUID() + " has crashed into Robot " + ((Robot)crashedRobots.getLast()).getUID();
+						running = false;
+					}else if(((Robot)actor).batteryEmpty()){
+						stopString = "Robot " + ((Robot)actor).getUID() + " has run out of battery";
+						running = false;
+					}
 				}// case Robot
 				case "ChargingPod":{
 					((ChargingPod)actor).tick(robots);
 				}//case ChargingPod
 				case "PackingStation":{
 					Order nextOrder = orders.getFirst();
-					((PackingStation)actor).tick(robots, nextOrder, updateWarehouse);
+					((PackingStation)actor).tick(robots);
 				}// case PackingStation
 				default:{}//default
 				

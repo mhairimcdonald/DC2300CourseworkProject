@@ -12,19 +12,19 @@ public class Warehouse {
 	private int height;
 	private int width;
 	// Storage for the actors
-	private HashMap<Location, ArrayList<Actor>> warehouse;
+	private HashMap<Location, LinkedList<Actor>> warehouse;
 
 	public Warehouse(int height, int width) {
 		this.height = height;
 		this.width = width;
 		//Create two-dimensional array of Actors, stored by position
-		warehouse = new HashMap<Location, ArrayList<Actor>>();
+		warehouse = new HashMap<Location, LinkedList<Actor>>();
 		this.stats = new WarehouseStats();
 	}
 	
 	
 	
-	public void setWarehouse(HashMap<Location, ArrayList<Actor>> warehouse) {
+	public void setWarehouse(HashMap<Location, LinkedList<Actor>> warehouse) {
 		this.warehouse = warehouse;
 	}
 
@@ -42,7 +42,7 @@ public class Warehouse {
 
 
 
-	public HashMap<Location, ArrayList<Actor>> getWarehouse() {
+	public HashMap<Location, LinkedList<Actor>> getWarehouse() {
 		return warehouse;
 	}
 
@@ -58,7 +58,7 @@ public class Warehouse {
 		
 		for(Actor actor: actors) {
 			Location loc = actor.getLocation();
-			ArrayList<Actor> currentLocActors = new ArrayList<>();
+			LinkedList<Actor> currentLocActors = new LinkedList<>();
 			currentLocActors.addAll(warehouse.get(loc));
 			currentLocActors.add(actor);
 			warehouse.put(loc, currentLocActors);
@@ -92,11 +92,11 @@ public class Warehouse {
 		place(actor, loc);
 	}
 	
-	public ArrayList<Actor> getObjectAt(Location loc) {
+	public LinkedList<Actor> getObjectAt(Location loc) {
 		return warehouse.get(loc);
 	}
 	
-	public ArrayList<Actor> getObjectAt(int row, int col) {
+	public LinkedList<Actor> getObjectAt(int row, int col) {
 		Location location = new Location(col, row);
 		return warehouse.get(location);
 	}
@@ -116,12 +116,12 @@ public class Warehouse {
 		//not sure if needed, might need method to create the actual warehouse just
 	}//operate
 	
-	public HashMap<Location,ArrayList<Actor>> clearRobots() {
-		HashMap<Location,ArrayList<Actor>> tempMap = null;
+	public HashMap<Location,LinkedList<Actor>> clearRobots() {
+		HashMap<Location,LinkedList<Actor>> tempMap = null;
 		for(int hIndex = 0; hIndex < height; hIndex++) {
 			for(int wIndex = 0; wIndex < width; wIndex++) {
 				Location mapLoc = new Location(wIndex, hIndex);
-				ArrayList<Actor> actorsInLoc = warehouse.get(mapLoc);
+				LinkedList<Actor> actorsInLoc = warehouse.get(mapLoc);
 				for(Actor actor: actorsInLoc) {
 					if(actor instanceof Robot) {
 						actorsInLoc.remove(actor);

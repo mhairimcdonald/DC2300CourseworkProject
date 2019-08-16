@@ -402,9 +402,9 @@ public class Robot implements Actor {
 		return totalCost;
 	}
 	
-	public boolean crash(HashMap<Location, ArrayList<Actor>> mapState) {
+	public boolean crash(HashMap<Location, LinkedList<Actor>> mapState) {
 		boolean crashed = false;
-		ArrayList<Actor> a = mapState.get(location); //Array at current Loc
+		LinkedList<Actor> a = mapState.get(location); //Array at current Loc
 		int noOfRobots = 0; //no.Robots in that array
 		//If there's more than one actor in that position
 		if (a.size()>1) {
@@ -432,11 +432,6 @@ public class Robot implements Actor {
 
 	@Override
 	public void perform() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void tick(HashMap<Location, ArrayList<Actor>> mapState) {
 		// TODO Auto-generated method stub
 		
 	}
