@@ -50,6 +50,13 @@ public class PackingStation implements Actor {
 		UID = uID;
 	}
 
+	//Basic Constructor
+	public PackingStation() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public void ask() {
 		
 	}//ask

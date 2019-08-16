@@ -1,16 +1,22 @@
 package warehouse.javafx;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
@@ -42,12 +48,17 @@ public class WarehouseController {
 	@FXML
 	private MenuItem menuQuit;
 	@FXML
+	private MenuItem gitHubMenu;
+	@FXML
 	private GridPane simulationBoard;
+	
 	public static ConfigFile primaryConfigFile;
+	public static boolean configValid;
 	private Pane[][] gridPaneIndex;
 
 	public WarehouseController() {
 		primaryConfigFile = new ConfigFile();
+		configValid = false;
 	}
 
 	@FXML
@@ -57,6 +68,14 @@ public class WarehouseController {
 
 	@FXML
 	public void startSimulation() {
+		if (!configValid) {
+			//If the config hasn't been set properly, error.
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("No Config Loaded");
+			alert.setHeaderText("You need to load or create a .sim file first.");
+			alert.showAndWait();
+			return;
+		}
 		startButton.setDisable(true);
 		startButton.setDefaultButton(false);
 		pauseButton.setDisable(false);
@@ -89,6 +108,8 @@ public class WarehouseController {
 
 	@FXML
 	public void newWarehouse() {
+		//Set false at the start to ensure to partial configFile builds.
+		configValid = false;
 		final FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("NewWarehouseGrid.fxml"));
 		loader.setController(new newWarehouseController());
@@ -109,6 +130,13 @@ public class WarehouseController {
 	}
 
 	private void reloadPrimaryConfigFile() {
+		//If the configFile isn't valid, set the GUI to default.
+		if (!configValid) {
+			GridPane gp = new GridPane();
+			setSimulationBoard(gp);
+			primaryConfigFile = null;
+			return;
+		}
 		int cols = primaryConfigFile.getWidth();
 		int rows = primaryConfigFile.getHeight();
 		createGridBoard(cols, rows);
@@ -127,6 +155,8 @@ public class WarehouseController {
 			reset();
 			FileLoader fl = new FileLoader();
 			primaryConfigFile = fl.parseFile(file);
+			//If the load has gotten this far you can trust the ConfigFile to be valid.
+			configValid = true;
 			reloadPrimaryConfigFile();
 		}
 
@@ -159,6 +189,39 @@ public class WarehouseController {
 		Stage stage = (Stage) gridBoardAnchor.getScene().getWindow();
 		// close window
 		stage.close();
+	}
+	
+	@FXML
+	public void gitHubMenuAction() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Open Webpage?");
+		alert.setHeaderText("This will open a webpage\n"
+							+ "to this projects GitHub\n"
+							+ "repository. Continue? ");
+		alert.showAndWait();
+		if (alert.getResult() != ButtonType.OK) {
+			return;
+		}
+
+		String websiteURL = "https://github.com/mhairimcdonald/DC2300CourseworkProject";
+		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+			try {
+				Desktop.getDesktop().browse(new URI(websiteURL));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				runtime.exec("xdg-open" + websiteURL);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void saveFile(File f) {
@@ -239,17 +302,21 @@ public class WarehouseController {
 		
 		anchorToEdges(gp);
 
+		setSimulationBoard(gp);
+	}
+	
+	public void setSimulationBoard(GridPane gridPane) {
 		if (simulationBoard == null) {
 			// If there is currently no board, add this one
-			simulationBoard = gp;
+			simulationBoard = gridPane;
 			// Add grid to the Anchor
-			gridBoardAnchor.getChildren().addAll(gp);
+			gridBoardAnchor.getChildren().addAll(gridPane);
 		} else {
 			// If there is currently a board, remove it then add this one.
 			gridBoardAnchor.getChildren().remove(simulationBoard);
-			simulationBoard = gp;
+			simulationBoard = gridPane;
 			// Add grid to the Anchor
-			gridBoardAnchor.getChildren().addAll(gp);
+			gridBoardAnchor.getChildren().addAll(gridPane);
 		}
 	}
 

@@ -48,4 +48,9 @@ public class ConfigOrder {
 		this.storageLocations.remove(index);
 	}
 
+	public void setTicksToPack(int ticksToPack) {
+		this.ticksToPack = ticksToPack;
+		
+	}
+
 }

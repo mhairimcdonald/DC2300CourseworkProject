@@ -12,6 +12,11 @@ public class Order {
 		this.itemLocations = itemLocations;
 	}
 
+	//Generic Order contructor
+	public Order() {
+		// TODO Auto-generated constructor stub
+	}
+
 	//generates random orders for simulation
 	public void randomOrderGeneration() {
 		//TODO generate random simulation
@@ -31,6 +36,10 @@ public class Order {
 
 	public void setItemLocations(ArrayList<String> itemLocations) {
 		this.itemLocations = itemLocations;
+	}
+	
+	public String getItemLocation(int i) {
+		return itemLocations.get(i);
 	}
 
 	//Reads the orders from a file

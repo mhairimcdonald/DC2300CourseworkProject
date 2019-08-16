@@ -9,10 +9,10 @@ import javafx.stage.Stage;
 import warehouse.model.Warehouse;
 
 public class Main extends Application {
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-
 			final FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("WarehouseScene.fxml"));
 			loader.setController(new WarehouseController());

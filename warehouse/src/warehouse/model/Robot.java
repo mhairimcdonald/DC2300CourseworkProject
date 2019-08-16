@@ -27,9 +27,12 @@ public class Robot implements Actor {
 		this.destinations = null;
 		this.currentDestination = null;
 	}
+  
+  //basic constructor
+	public Robot() {
+		// TODO Auto-generated constructor stub
+	}
 
-
-	
 	public LinkedList<Location> getDestinations() {
 		return destinations;
 	}
@@ -57,7 +60,6 @@ public class Robot implements Actor {
 	}
 
 
-
 	public Location getCurrentDestination() {
 		return currentDestination;
 	}
@@ -66,8 +68,6 @@ public class Robot implements Actor {
 
 	public void setCurrentDestination(Location currentDestination) {
 		this.currentDestination = destinations.removeFirst();
-	}
-
 
 
 	public int getNoOfItems() {
