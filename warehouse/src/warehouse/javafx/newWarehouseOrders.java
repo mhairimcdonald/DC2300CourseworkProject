@@ -151,6 +151,8 @@ public class newWarehouseOrders {
 		 *  to the original Window.
 		 */
 		WarehouseController.primaryConfigFile = cf;
+		//Set the configValid to be true so that it loads.
+		WarehouseController.configValid = true;
 		closeButtonAction();
 	}
 	
