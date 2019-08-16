@@ -30,6 +30,7 @@ public class PathMapper {
 		this.mapState = mapState;
 		ManhattanCostEstimator m = new ManhattanCostEstimator();
 		this.valueMap = m.getCostMap(destination, mapState);
+		setObstructions();
 	}
 	
 	public HashMap<Location, Integer> getValueMap() {
