@@ -1,5 +1,9 @@
 package warehouse.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+
 public class Robot implements Actor {
 	
 	private int currentCharge;
@@ -8,6 +12,8 @@ public class Robot implements Actor {
 	private int noOfItems;
 	private Location location;
 	private String UID;	
+	private LinkedList<Location> destinations;
+	private Location currentDestination;
 	
 	
 	public Robot(String chargePodID, int maxCharge, Location location, String uID) {
@@ -18,14 +24,50 @@ public class Robot implements Actor {
 		this.noOfItems = 0;
 		this.location = location;
 		this.UID = uID;
+		this.destinations = null;
+		this.currentDestination = null;
 	}
-
-
-	//basic constructor
+  
+  //basic constructor
 	public Robot() {
 		// TODO Auto-generated constructor stub
 	}
 
+	public LinkedList<Location> getDestinations() {
+		return destinations;
+	}
+
+
+
+	public void setDestinations(Order order, Warehouse warehouse) {
+		ArrayList<String> destinations = order.getItemLocations();
+		int height = warehouse.getHeight();
+		int width = warehouse.getWidth();
+		HashMap<Location, Actor> map = new HashMap<Location,Actor>();
+		Actor[][] currentWarehouse = new Actor[height][width];
+		for(int hIndex = 0; hIndex > height; hIndex++) {
+			for(int wIndex = 0; wIndex > width; wIndex++) {
+				if(currentWarehouse[height][width] != null) {
+					Location newLocation = new Location()
+					map.put(key, value)
+				}
+			}
+		}
+		
+		for(String destination: destinations) {
+			
+		}
+	}
+
+
+	public Location getCurrentDestination() {
+		return currentDestination;
+	}
+
+
+
+	public void setCurrentDestination(Location currentDestination) {
+		this.currentDestination = destinations.removeFirst();
 
 
 	public int getNoOfItems() {
@@ -89,8 +131,13 @@ public class Robot implements Actor {
 		this.maxCharge = maxCharge;
 	}
 
+	//This decides if robot goes to ChargingPod or inital Destination
 	public void detectPower() {
-		// Not sure if this is needed
+		/*
+		 * Can Robot go to dest && make it back to CP
+		 * YES - go to dest return 
+		 * No- go towards CP
+		 */
 	}//detectPower
 	
 	public void move() {
@@ -107,7 +154,7 @@ public class Robot implements Actor {
 	public void tick() {
 		//positon of robot
 		//not sure how to handle where robot aims at
-		if(objectAtLocation.getUID() = targetUID) {
+		if(location == currentDestination) {
 			Actor actor = objectAtLocation;
 			switch(actor.getName()) {
 			case("ChargingPod"):{

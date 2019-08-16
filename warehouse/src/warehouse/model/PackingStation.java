@@ -1,5 +1,7 @@
 package warehouse.model;
 
+import java.util.ArrayList;
+
 public class PackingStation implements Actor {
 
 	private int noOfItems;
@@ -7,6 +9,7 @@ public class PackingStation implements Actor {
 	private Location location;
 	private String UID;
 	private Order currentOrder;
+	
 	public PackingStation(Location location, String uID) {
 		super();
 		this.noOfItems = 0;
@@ -110,16 +113,37 @@ public class PackingStation implements Actor {
 		
 	}//receive
 
-	@Override
-	public void tick() {
+	public Boolean tick(ArrayList<Robot> robots, Order nextOrder, Warehouse warehouse) {
 		// TODO Auto-generated method stub
 		if(noOfItems > 0) {
 			ticksPacking++;
 			if(ticksPacking == ticksToDispatch) {
 				dispatch();
 			}
+			return false;
 		}
-		else
+		else if(currentOrder != null) {
+				
+			return false;
+		}//else if
+		else {
+			currentOrder = nextOrder;
+			LinkedList<>
+			for(Robot currentRobot: robots) {
+				if(currentRobot.getDestinations().getFirst() == null) {
+					currentRobot.setDestinations(currentOrder, warehouse);
+				}
+			}
+			return true;
+		}//else
+	}//
+
+
+
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
