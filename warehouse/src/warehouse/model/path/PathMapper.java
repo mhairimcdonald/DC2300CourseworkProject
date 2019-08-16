@@ -15,13 +15,21 @@ public class PathMapper {
 	private HashMap<Location, Integer> valueMap;
 	private HashMap<Location, ArrayList<Actor>> mapState;
 	
-	public PathMapper(HashMap<Location, ArrayList<Actor>> mapState ) {
-		valueMap = new HashMap<Location, Integer>();
-		mapState = new HashMap<Location, ArrayList<Actor>>();
+	public PathMapper() {
+		this.valueMap = new HashMap<Location, Integer>();
+		this.mapState = new HashMap<Location, ArrayList<Actor>>();
 	}
 	
-	public PathMapper() {
-		
+	public PathMapper(HashMap<Location, ArrayList<Actor>> mapState, Location destination) {
+		this.mapState = mapState;
+		ManhattanCostEstimator m = new ManhattanCostEstimator();
+		this.valueMap = m.getCostMap(destination, mapState);
+	}
+	
+	public void setupMapper(HashMap<Location, ArrayList<Actor>> mapState, Location destination) {
+		this.mapState = mapState;
+		ManhattanCostEstimator m = new ManhattanCostEstimator();
+		this.valueMap = m.getCostMap(destination, mapState);
 	}
 	
 	public HashMap<Location, Integer> getValueMap() {
