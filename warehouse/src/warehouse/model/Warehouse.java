@@ -1,5 +1,9 @@
 package warehouse.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+
 public class Warehouse {
 
 	private WarehouseStats stats;
@@ -8,23 +12,70 @@ public class Warehouse {
 	private int height;
 	private int width;
 	// Storage for the actors
-	private Actor[][] warehouse;
+	private HashMap<Location, ArrayList<Actor>> warehouse;
 
 	public Warehouse(int height, int width) {
 		this.height = height;
 		this.width = width;
 		//Create two-dimensional array of Actors, stored by position
-		warehouse = new Actor[height][width];
+		warehouse = new HashMap<Location, ArrayList<Actor>>();
 		this.stats = new WarehouseStats();
 	}
 	
-	//Clear the warehouse of all Actors
-	public void clear() {
-		for (int row = 0; row < this.height; row++) {
-			for (int col = 0; col < this.width; col++) {
-				warehouse[row][col] = null;
+	
+	
+	public WarehouseStats getStats() {
+		return stats;
+	}
+
+
+
+	public void setStats(WarehouseStats stats) {
+		this.stats = stats;
+	}
+
+
+
+	public HashMap<Location, ArrayList<Actor>> getWarehouse() {
+		return warehouse;
+	}
+
+
+
+	public void setWarehouse(LinkedList<Actor> actors, int height, int width) {
+		for(int hIndex = 0; hIndex < height; hIndex++) {
+			for(int wIndex = 0; wIndex < width; wIndex++) {
+				Location mapLoc = new Location(wIndex, hIndex);
+				warehouse.put(mapLoc, null);
 			}
 		}
+		
+		for(Actor actor: actors) {
+			Location loc = actor.getLocation();
+			ArrayList<Actor> currentLocActors = new ArrayList<>();
+			currentLocActors.addAll(warehouse.get(loc));
+			currentLocActors.add(actor);
+			warehouse.put(loc, currentLocActors);
+		}
+	}
+
+
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+
+
+	//Clear the warehouse of all Actors
+	public void clear() {
+		warehouse.clear();
 	}
 	
 	public void place(Actor actor, int row, int col) {
@@ -35,12 +86,13 @@ public class Warehouse {
 		place(actor, loc);
 	}
 	
-	public Actor getObjectAt(Location loc) {
-		return getObjectAt(loc.getRow(), loc.getCol());
+	public ArrayList<Actor> getObjectAt(Location loc) {
+		return warehouse.get(loc);
 	}
 	
-	public Actor getObjectAt(int row, int col) {
-		return warehouse[row][col];
+	public ArrayList<Actor> getObjectAt(int row, int col) {
+		Location location = new Location(col, row);
+		return warehouse.get(location);
 	}
 	
 	public int getHeight() {

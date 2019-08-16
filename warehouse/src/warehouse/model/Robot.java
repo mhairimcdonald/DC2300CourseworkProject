@@ -205,9 +205,13 @@ public class Robot implements Actor {
 			} else {
 				//You have destinations. Set currentDestination
 				setCurrentDestination(getDestinations().getFirst());
-			}
-		}
+
+	public Location tick(Location loc) {
 		
+	}
+	
+	@Override
+	public void tick() {    		
 		if (isCharging()) {
 			//If it's currently charging, stay put until you have enough charge.
 			if (currentCharge == maxCharge) {

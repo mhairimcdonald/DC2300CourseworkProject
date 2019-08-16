@@ -1,6 +1,7 @@
 package warehouse.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Simulation {
 	private List<Actor> newActors;
 	private ArrayList<Robot> robots;
 	private Warehouse warehouse;
+	private HashMap<Location, ArrayList<Actor>> mapState;
 	private Warehouse updateWarehouse;
 	private int step;
 	private boolean running = false;
@@ -27,17 +29,19 @@ public class Simulation {
 		int width = cf.getWidth();
 		int height = cf.getHeight();
 		warehouse = new Warehouse(height, width);
-		actors = new ArrayList<Actor>();
+		actors = new LinkedList<Actor>();
 		orders = new LinkedList<Order>();
 		configOrders = new ArrayList<ConfigOrder>();
 		configOrders.addAll(cf.getOrder());
-		configActors = new ArrayList<ConfigActor>();
-		configActors.addAll(cf.getPodRobot()); //add config robots
+		configActors = new LinkedList<ConfigActor>();
+		
 		configActors.addAll(cf.getShelf()); //add config shelves
 		configActors.addAll(cf.getStation()); // add config stations
+		configActors.addAll(cf.getPodRobot()); //add config robots
+		
 		for(ConfigOrder order: configOrders) {
 			listOfStorageLocations = order.getStorageLocations();
-			int ticksToPack = Integer.parseInt(order.getuID());//NEED TO CHAGE HOW ORDER IS READ
+			int ticksToPack = order.getTicksToPack();//NEED TO CHAGE HOW ORDER IS READ
 			Order newOrder = new Order(ticksToPack, listOfStorageLocations);
 			orders.add(newOrder);
 		}
@@ -74,13 +78,12 @@ public class Simulation {
 				Location location = new Location(row, col);
 				PackingStation packingStation = new PackingStation(location, UID);
 				actors.add(packingStation);
-				
 			}// case ConfigPackingStation
 			
 			}//switch
 		}//for Loop
-		//newActors = new ArrayList<Actor>();
 		warehouse = new Warehouse(width, height);
+		warehouse.setWarehouse(actors);
 		updateWarehouse = new Warehouse(width, height);
 		
 		reset();
