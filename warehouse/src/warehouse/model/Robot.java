@@ -21,7 +21,13 @@ public class Robot implements Actor {
 	}
 
 
-	
+	//basic constructor
+	public Robot() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public int getNoOfItems() {
 		return noOfItems;
 	}
