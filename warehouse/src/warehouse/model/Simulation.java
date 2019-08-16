@@ -2,6 +2,7 @@ package warehouse.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import warehouse.io.ConfigFile;
@@ -9,22 +10,25 @@ import warehouse.io.configActors.*;
 
 public class Simulation {
 	private int tickCounter = 0;
-	private List<Order> orders;
+	private LinkedList<Order> orders;
 	private List<ConfigOrder> configOrders;
 	private List<Actor> actors;
 	private List<ConfigActor> configActors;
 	private List<Actor> newActors;
+	private ArrayList<Robot> robots;
 	private Warehouse warehouse;
 	private Warehouse updateWarehouse;
 	private int step;
 	private boolean running = false;
+	private ArrayList<String> listOfStorageLocations;
+	//public static PathFinding Variable robots will use to work out next location/ distance to certain locations
 
 	public void start(ConfigFile cf) {
 		int width = cf.getWidth();
 		int height = cf.getHeight();
 		warehouse = new Warehouse(height, width);
 		actors = new ArrayList<Actor>();
-		orders = new ArrayList<Order>();
+		orders = new LinkedList<Order>();
 		configOrders = new ArrayList<ConfigOrder>();
 		configOrders.addAll(cf.getOrder());
 		configActors = new ArrayList<ConfigActor>();
@@ -32,7 +36,7 @@ public class Simulation {
 		configActors.addAll(cf.getShelf()); //add config shelves
 		configActors.addAll(cf.getStation()); // add config stations
 		for(ConfigOrder order: configOrders) {
-			ArrayList<String> listOfStorageLocations = order.getStorageLocations();
+			listOfStorageLocations = order.getStorageLocations();
 			int ticksToPack = Integer.parseInt(order.getuID());//NEED TO CHAGE HOW ORDER IS READ
 			Order newOrder = new Order(ticksToPack, listOfStorageLocations);
 			orders.add(newOrder);
@@ -52,6 +56,7 @@ public class Simulation {
 				
 				int capacity = cf.getCapacity();
 				Robot robot = new Robot(poduID, capacity, location, UID);
+				robots.add(robot);
 				actors.add(robot);
 			}// case ConfigRobot
 			case "ConfigStorageShelf":{
@@ -72,8 +77,8 @@ public class Simulation {
 				
 			}// case ConfigPackingStation
 			
-			}
-		}
+			}//switch
+		}//for Loop
 		//newActors = new ArrayList<Actor>();
 		warehouse = new Warehouse(width, height);
 		updateWarehouse = new Warehouse(width, height);
@@ -86,7 +91,13 @@ public class Simulation {
 		tickCounter++;
 		for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
 			Actor actor = iter.next();
-			actor.tick();
+			if(actor instanceof PackingStation) {
+				Boolean removeOrder = ((PackingStation)actor).tick(robots, orders.getFirst(), warehouse);
+				if (removeOrder == true) { orders.removeFirst();}
+			}else {
+				actor.tick();
+			}
+			
 		}
 	}// continueSimulation
 
