@@ -1,7 +1,10 @@
 package warehouse.javafx;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Alert.AlertType;
@@ -44,7 +48,10 @@ public class WarehouseController {
 	@FXML
 	private MenuItem menuQuit;
 	@FXML
+	private MenuItem gitHubMenu;
+	@FXML
 	private GridPane simulationBoard;
+	
 	public static ConfigFile primaryConfigFile;
 	public static boolean configValid;
 	private Pane[][] gridPaneIndex;
@@ -182,6 +189,39 @@ public class WarehouseController {
 		Stage stage = (Stage) gridBoardAnchor.getScene().getWindow();
 		// close window
 		stage.close();
+	}
+	
+	@FXML
+	public void gitHubMenuAction() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Open Webpage?");
+		alert.setHeaderText("This will open a webpage\n"
+							+ "to this projects GitHub\n"
+							+ "repository. Continue? ");
+		alert.showAndWait();
+		if (alert.getResult() != ButtonType.OK) {
+			return;
+		}
+
+		String websiteURL = "https://github.com/mhairimcdonald/DC2300CourseworkProject";
+		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+			try {
+				Desktop.getDesktop().browse(new URI(websiteURL));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				runtime.exec("xdg-open" + websiteURL);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void saveFile(File f) {
