@@ -150,6 +150,10 @@ public class Robot implements Actor {
 	}//take
 
 
+	public Location tick(Location loc) {
+		
+	}
+	
 	@Override
 	public void tick() {
 		//positon of robot
