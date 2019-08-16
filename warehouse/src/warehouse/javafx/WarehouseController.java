@@ -38,8 +38,6 @@ public class WarehouseController {
 	@FXML
 	private Button startButton;
 	@FXML
-	private Button pauseButton;
-	@FXML
 	private Button resetButton;
 	@FXML
 	private Label statusUpdate;
@@ -51,14 +49,18 @@ public class WarehouseController {
 	private MenuItem gitHubMenu;
 	@FXML
 	private GridPane simulationBoard;
+	private Simulation sim;
 	
-	public static ConfigFile primaryConfigFile;
+	private ConfigFile originalConfigFile;
+	public static ConfigFile runningConfigFile;
 	public static boolean configValid;
 	private Pane[][] gridPaneIndex;
 
 	public WarehouseController() {
-		primaryConfigFile = new ConfigFile();
+		runningConfigFile = new ConfigFile();
+		originalConfigFile = new ConfigFile();
 		configValid = false;
+		sim = new Simulation();
 	}
 
 	@FXML
@@ -78,31 +80,23 @@ public class WarehouseController {
 		}
 		startButton.setDisable(true);
 		startButton.setDefaultButton(false);
-		pauseButton.setDisable(false);
-		pauseButton.setDefaultButton(true);
 		resetButton.setDisable(false);
+		resetButton.setDefaultButton(true);
 		statusUpdate.setText("Status: Running");
-		Simulation simulation = new Simulation();
+		sim.start(runningConfigFile);
+		sim.continueSimulation();
 
-	}
-
-	@FXML
-	public void pauseSimulation() {
-		pauseButton.setDisable(true);
-		pauseButton.setDefaultButton(false);
-		startButton.setDisable(false);
-		startButton.setDefaultButton(true);
-		statusUpdate.setText("Status: Paused...");
 	}
 
 	@FXML
 	public void resetSimulation() {
 		startButton.setDisable(false);
 		startButton.setDefaultButton(true);
-		pauseButton.setDisable(true);
-		pauseButton.setDefaultButton(false);
+		resetButton.setDefaultButton(false);
 		resetButton.setDisable(true);
 		statusUpdate.setText("Status: Waiting");
+		loadPrimaryConfigFile();
+		configValid = false;
 
 	}
 
@@ -122,24 +116,29 @@ public class WarehouseController {
 			newWarehouse.setTitle("New Warehouse");
 			newWarehouse.initModality(Modality.APPLICATION_MODAL);
 			newWarehouse.showAndWait();
-			reloadPrimaryConfigFile();
+			reloadRunningConfigFile();
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	private void reloadPrimaryConfigFile() {
+	private void reloadRunningConfigFile() {
 		//If the configFile isn't valid, set the GUI to default.
 		if (!configValid) {
 			GridPane gp = new GridPane();
 			setSimulationBoard(gp);
-			primaryConfigFile = null;
+			runningConfigFile = null;
 			return;
 		}
-		int cols = primaryConfigFile.getWidth();
-		int rows = primaryConfigFile.getHeight();
+		int cols = runningConfigFile.getWidth();
+		int rows = runningConfigFile.getHeight();
 		createGridBoard(cols, rows);
+		
+	}
+	
+	private void loadPrimaryConfigFile() {
+		runningConfigFile = originalConfigFile;
 		
 	}
 
@@ -154,10 +153,10 @@ public class WarehouseController {
 		if (file != null) {
 			reset();
 			FileLoader fl = new FileLoader();
-			primaryConfigFile = fl.parseFile(file);
+			runningConfigFile = fl.parseFile(file);
 			//If the load has gotten this far you can trust the ConfigFile to be valid.
 			configValid = true;
-			reloadPrimaryConfigFile();
+			reloadRunningConfigFile();
 		}
 
 	}
@@ -176,7 +175,7 @@ public class WarehouseController {
 		if (f != null) {
 			WriteToFile wf = new WriteToFile();
 			try {
-				wf.writeFile(f, primaryConfigFile);
+				wf.writeFile(f, runningConfigFile);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -270,14 +269,14 @@ public class WarehouseController {
 		//Initialize the creator used to make the different actor visuals
 		ActorShapes creator = new ActorShapes();
 		
-		for (ConfigPackingStation c : primaryConfigFile.getStation()) {
+		for (ConfigPackingStation c : runningConfigFile.getStation()) {
 			StackPane sp = new StackPane();
 			sp.setId(c.getuID());
 			sp = creator.createPackingStation(c.getuID());
 			anchorToEdges(sp);
 			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(sp);
 		}
-		for (ConfigRobot c : primaryConfigFile.getPodRobot()) {
+		for (ConfigRobot c : runningConfigFile.getPodRobot()) {
 			StackPane spr = new StackPane();
 			spr.setId(c.getuID());
 			spr = creator.createRobot(c.getuID());
@@ -291,7 +290,7 @@ public class WarehouseController {
 			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(spc);
 			gridPaneIndex[c.getRow()][c.getCol()].getChildren().add(spr);
 		}
-		for (ConfigStorageShelf c : primaryConfigFile.getShelf()) {
+		for (ConfigStorageShelf c : runningConfigFile.getShelf()) {
 			StackPane sp = new StackPane();
 			sp.setId(c.getuID());
 			sp = creator.createStorageShelf(c.getuID());
@@ -329,6 +328,6 @@ public class WarehouseController {
 	
 	private void reset() {
 		gridPaneIndex = null;
-		primaryConfigFile = null;
+		runningConfigFile = null;
 	}
 }

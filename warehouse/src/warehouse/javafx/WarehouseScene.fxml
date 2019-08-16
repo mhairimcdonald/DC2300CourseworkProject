@@ -36,7 +36,6 @@
             <HBox alignment="TOP_RIGHT" minWidth="18.0" prefHeight="32.0" prefWidth="180.0">
                <children>
                   <Button fx:id="startButton" defaultButton="true" mnemonicParsing="false" onAction="#startSimulation" prefHeight="32.0" prefWidth="60.0" text="Start" textOverrun="WORD_ELLIPSIS" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="pauseButton" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#pauseSimulation" prefHeight="32.0" prefWidth="60.0" text="Pause" textOverrun="WORD_ELLIPSIS" HBox.hgrow="ALWAYS" />
                   <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetSimulation" prefHeight="32.0" prefWidth="60.0" text="Reset" textOverrun="WORD_ELLIPSIS" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>

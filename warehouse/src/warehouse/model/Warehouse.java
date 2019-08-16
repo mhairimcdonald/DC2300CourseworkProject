@@ -1,12 +1,10 @@
 package warehouse.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Warehouse {
 
-	private WarehouseStats stats;
 	
 	// Height and Width of the Warehouse
 	private int height;
@@ -19,25 +17,12 @@ public class Warehouse {
 		this.width = width;
 		//Create two-dimensional array of Actors, stored by position
 		warehouse = new HashMap<Location, LinkedList<Actor>>();
-		this.stats = new WarehouseStats();
 	}
 	
 	
 	
 	public void setWarehouse(HashMap<Location, LinkedList<Actor>> warehouse) {
 		this.warehouse = warehouse;
-	}
-
-
-
-	public WarehouseStats getStats() {
-		return stats;
-	}
-
-
-
-	public void setStats(WarehouseStats stats) {
-		this.stats = stats;
 	}
 
 
@@ -52,14 +37,14 @@ public class Warehouse {
 		for(int hIndex = 0; hIndex < height; hIndex++) {
 			for(int wIndex = 0; wIndex < width; wIndex++) {
 				Location mapLoc = new Location(wIndex, hIndex);
-				warehouse.put(mapLoc, null);
+				LinkedList<Actor> ll = new LinkedList<Actor>();
+				warehouse.put(mapLoc, ll);
 			}
 		}
 		
 		for(Actor actor: actors) {
 			Location loc = actor.getLocation();
-			LinkedList<Actor> currentLocActors = new LinkedList<>();
-			currentLocActors.addAll(warehouse.get(loc));
+			LinkedList<Actor> currentLocActors = new LinkedList<Actor>();
 			currentLocActors.add(actor);
 			warehouse.put(loc, currentLocActors);
 		}
@@ -109,27 +94,22 @@ public class Warehouse {
 		return width;
 	}
 	
-	public void reset() {
-		stats.reset();
-	}
 	public void operate() {
 		//not sure if needed, might need method to create the actual warehouse just
 	}//operate
 	
 	public HashMap<Location,LinkedList<Actor>> clearRobots() {
-		HashMap<Location,LinkedList<Actor>> tempMap = null;
-		for(int hIndex = 0; hIndex < height; hIndex++) {
-			for(int wIndex = 0; wIndex < width; wIndex++) {
-				Location mapLoc = new Location(wIndex, hIndex);
-				LinkedList<Actor> actorsInLoc = warehouse.get(mapLoc);
-				for(Actor actor: actorsInLoc) {
-					if(actor instanceof Robot) {
-						actorsInLoc.remove(actor);
-					}
+		HashMap<Location,LinkedList<Actor>> tempMap = new HashMap<Location,LinkedList<Actor>>();
+		tempMap = warehouse;
+		
+		for (Location l : warehouse.keySet()) {
+			for (Actor a : warehouse.get(l)) {
+				if (a instanceof Robot) {
+					tempMap.remove(a);
 				}
-				tempMap.put(mapLoc, actorsInLoc);
 			}
 		}
+		
 		return tempMap;
 	}
 }

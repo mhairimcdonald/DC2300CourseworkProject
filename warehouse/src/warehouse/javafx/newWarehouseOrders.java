@@ -150,7 +150,7 @@ public class newWarehouseOrders {
 		 *  The ConfigFile is now complete. Returning it back
 		 *  to the original Window.
 		 */
-		WarehouseController.primaryConfigFile = cf;
+		WarehouseController.runningConfigFile = cf;
 		//Set the configValid to be true so that it loads.
 		WarehouseController.configValid = true;
 		closeButtonAction();
