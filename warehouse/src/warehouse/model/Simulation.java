@@ -55,11 +55,10 @@ public class Simulation {
 				Location location = new Location(row, col);
 				String poduID = ((ConfigRobot)actor).getChargingPoduID();
 				int chargeSpeed = cf.getChargeSpeed();
-				ChargingPod chargePod = new ChargingPod(location, poduID, chargeSpeed);
-				actors.add(chargePod);
-				
 				int capacity = cf.getCapacity();
 				Robot robot = new Robot(poduID, capacity, location, UID);
+				ChargingPod chargePod = new ChargingPod(location, poduID, chargeSpeed, robot);
+				actors.add(chargePod);
 				robots.add(robot);
 				actors.add(robot);
 			}// case ConfigRobot

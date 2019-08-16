@@ -1,25 +1,53 @@
 package warehouse.model;
 
+import java.util.ArrayList;
+
 public class ChargingPod implements Actor {
 
 	private Location location;
 	private String UID;
 	private int chargingSpeed;
+	private Robot matchingRobot;
 	
-	public ChargingPod(Location location, String uID, int chargingSpeed) {
+	public ChargingPod(Location location, String uID, int chargingSpeed, Robot matchingRobot) {
 		super();
 		this.location = location;
 		UID = uID;
 		this.chargingSpeed = chargingSpeed;
+		this.matchingRobot = matchingRobot;
 	}
 	
+	
+	
+	public Robot getMatchingRobot() {
+		return matchingRobot;
+	}
+
+
+
+	public void setMatchingRobot(Robot matchingRobot) {
+		this.matchingRobot = matchingRobot;
+	}
+
+
+
 	public ChargingPod() {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void tick() {
-		// TODO Auto-generated method stub
+		
+		
+	}//tick
+	
+	public void tick(ArrayList<Robot> robots) {
+		for(Robot robot: robots) {
+			Location robotLocation = robot.getLocation();
+			if((robotLocation == this.getLocation()) && (this.getMatchingRobot().getUID() == robot.getUID())) {
+				charge(robot);
+			}
+		}
 		
 	}//tick
 	
