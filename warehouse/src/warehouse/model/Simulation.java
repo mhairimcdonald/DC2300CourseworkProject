@@ -118,6 +118,9 @@ public class Simulation {
 					((PackingStation)actor).tick(robots);
 					if(((PackingStation)actor).getCurrentOrder() != null) {
 						allDispatched = false;
+					}else if(nextOrder != null){
+						((PackingStation)actor).setCurrentOrder(nextOrder);
+						allDispatched = false;
 					};
 				}// case PackingStation
 				default:{}//default
