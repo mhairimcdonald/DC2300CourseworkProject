@@ -12,10 +12,36 @@ public class StorageShelf implements Actor {
 		this.UID = UID;
 	}
 	
+	public StorageShelf() {
+		
+	}
+	
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void perform() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	public String getUID() {
+		return UID;
+	}
+
+	public void setUID(String uID) {
+		UID = uID;
 	}
 
 }
