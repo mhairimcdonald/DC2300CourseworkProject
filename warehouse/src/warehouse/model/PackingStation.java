@@ -35,16 +35,16 @@ public class PackingStation implements Actor {
 		}
 		if (robot == null) { //If no robot, search robots for a free robot
 			for (Robot r : robots) {
-				if (r.getOrder()==null) {
-					r.setOrder(currentOrder);
+				if (r.needsOrder(currentOrder, location)) {
 					robot = r;
 					break;
 				}
 			}
 		} else {//If you have a robot, check if they're in your place.
 			if (robot.getLocation()==location) {
-				robot.setOrder(null);
-				haveItems = true;
+				if (robot.takeOrder()) {
+					haveItems = true;
+				}
 			}
 		}
 		if (haveItems) {
@@ -86,6 +86,12 @@ public class PackingStation implements Actor {
 
 	@Override
 	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void perform() {
 		// TODO Auto-generated method stub
 		
 	}
