@@ -16,6 +16,7 @@ public class Robot implements Actor {
 	private int currentCharge;
 	private boolean item;
 	private boolean isCharging;
+	private Order order;
 	//Robot's connected ChargePad variables
 	private String chargePodID;
 	private Location chargePodLocation; //Added once during setup
@@ -148,6 +149,14 @@ public class Robot implements Actor {
 		this.maxCharge = maxCharge;
 	}
 
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
 	public boolean hasItem() {
 		return item;
 	}
@@ -185,14 +194,22 @@ public class Robot implements Actor {
 	
 	public Location tick(PathMapper pm, HashMap<Location, ArrayList<Actor>> mapState) {
 
+		//Check am I at my destination?
+		if (location == currentDestination) { //If yes, act on that
+			
+		} else { //If No, move
+			Location l = getNextLoc(pm, mapState);
+			setLocation(l); //Set own Location to the updated value;
+		}
 		
-		Location l = getNextLoc(pm, mapState);
-		setLocation(l); //Set own Location to the updated value;
 		return l;
 	}
 	
+
+	
 	//This gets where to move/or whether to stay
-	public Location getNextLoc(PathMapper pm, HashMap<Location, ArrayList<Actor>> mapState) {
+	
+	public Location getNextLoc(PathMapper pm, HashMap<Location, ArrayList<Actor>> mapState) {  
 		//If you have no current destination
 		if (currentDestination == null) {
 			//And you have no destinations
@@ -205,13 +222,8 @@ public class Robot implements Actor {
 			} else {
 				//You have destinations. Set currentDestination
 				setCurrentDestination(getDestinations().getFirst());
-
-	public Location tick(Location loc) {
-		
-	}
-	
-	@Override
-	public void tick() {    		
+			}
+		}
 		if (isCharging()) {
 			//If it's currently charging, stay put until you have enough charge.
 			if (currentCharge == maxCharge) {
@@ -312,11 +324,6 @@ public class Robot implements Actor {
 			crashed = true;
 		}
 		return crashed;
-	}
-
-	@Override
-	public void perform() {
-		
 	}
 
 	
