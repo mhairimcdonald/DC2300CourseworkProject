@@ -41,7 +41,7 @@ public class Robot implements Actor {
 		this.isCharging = false;
 		this.hasOrder = false;
 		this.orderReady = false;
-		this.destinations = null;
+		this.destinations = new LinkedList<Location>();
 		this.currentDestination = null;
 		this.order = null;
 	}
@@ -253,8 +253,9 @@ public class Robot implements Actor {
 			for (Actor a : mapState.get(l)) {
 				if (a instanceof StorageShelf) {
 					for (String s : shelfuIDs) {
-						if (s.contentEquals(((StorageShelf) a).getUID())) {
+						if (s.equals(((StorageShelf) a).getUID()))  {
 							destinations.add(a.getLocation());
+							currentDestination = destinations.getFirst();
 						}
 					}
 				}
@@ -264,7 +265,7 @@ public class Robot implements Actor {
 	
 	public Location tick(HashMap<Location, LinkedList<Actor>> mapState) {
 		PathMapper pm = new PathMapper(); //Initialise the Pathfinding object
-		Location l = null; //Initialise the return.
+		Location l = location; //Initialise the return.
 		
 		
 		//Am I charging currently?
@@ -299,7 +300,9 @@ public class Robot implements Actor {
 					}
 				} else {//I'm not there yet. Move!
 					l = getNextLoc(pm, mapState);
-					System.out.println("I returned: ["+l.getCol()+","+l.getRow()+"]");
+					if (l!=null) {
+						System.out.println("I returned: ["+l.getCol()+","+l.getRow()+"]");
+					}
 				}
 				
 			}
@@ -400,8 +403,9 @@ public class Robot implements Actor {
 		}
 		pm.setupMapper(mapState, currentDestination);
 		Location next = pm.getNextNearest(location);
-		System.out.println("Next Nearest: ["+next.getCol()+","+next.getRow()+"]");
-		
+		if (next!=null) {
+			System.out.println("Next Nearest: ["+next.getCol()+","+next.getRow()+"]");
+		}
 		return next;
 	}
 	

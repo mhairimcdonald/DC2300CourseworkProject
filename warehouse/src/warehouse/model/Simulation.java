@@ -82,41 +82,6 @@ public class Simulation {
 			} else {
 				System.out.println("Invalid");
 			}
-			/*
-			switch(actor.getClass().getCanonicalName()) {
-			case "ConfigRobot":{
-				int row = actor.getRow();
-				int col = actor.getCol();
-				String UID = actor.getuID();
-				Location location = new Location(row, col);
-				String poduID = ((ConfigRobot)actor).getChargingPoduID();
-				int chargeSpeed = cf.getChargeSpeed();
-				int capacity = cf.getCapacity();
-				Robot robot = new Robot(poduID, location, capacity, location, UID);
-				ChargingPod chargePod = new ChargingPod(location, poduID, chargeSpeed, robot);
-				actors.add(chargePod);
-				robots.add(robot);
-				actors.add(robot);
-			}// case ConfigRobot
-			case "ConfigStorageShelf":{
-				int row = actor.getRow();
-				int col = actor.getCol();
-				String UID = actor.getuID();
-				Location location = new Location(row, col);
-				StorageShelf storageShelf = new StorageShelf(location, UID);
-				actors.add(storageShelf);
-			}//case ConfigStorageShelf
-			case "ConfigPackingStation":{
-				int row = actor.getRow();
-				int col = actor.getCol();
-				String UID = actor.getuID();
-				Location location = new Location(row, col);
-				PackingStation packingStation = new PackingStation(location, UID);
-				actors.add(packingStation);
-			}// case ConfigPackingStation
-			
-			}//switch
-			*/
 		}//for Loop
 		warehouse = new Warehouse(width, height);
 		warehouse.setWarehouse(actors, width, height);
@@ -124,15 +89,41 @@ public class Simulation {
 	}// start
 
 
-	public void continueSimulation() {
+	public String continueSimulation() {
 		while(running) {
+			updateWarehouse = warehouse;
 			Boolean finished = false;
 			Boolean allDispatched = true;
 			for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
 				Actor actor = iter.next();
 				if (actor instanceof Robot) {
 					
-					((Robot)actor).tick(this.updateWarehouse.getWarehouse());
+					Location newPosition = ((Robot)actor).tick(this.updateWarehouse.getWarehouse()); //I want to move here
+					Location oldPosition = actor.getLocation(); //This is where I am.
+					
+					System.out.println("===================================\n"
+							+ "I want to move to:"+newPosition+"\n"
+									+ "I'm currently at:"+oldPosition+"\n"
+											+ "My Destination is: ["+((Robot)actor).getCurrentDestination().getCol()+","+((Robot)actor).getCurrentDestination().getRow()+"]\n"
+											+ "===================================");
+					
+					if (newPosition==null) {
+						System.out.println("I didn't move. I'm already there.");
+						//don't move. I'm fine
+					} else if (newPosition != oldPosition) {
+						//Remove Robot from its LinkedLisk<Actor> at it's current Pos
+						for (Actor a : this.updateWarehouse.getWarehouse().get(oldPosition)) {
+							if (a == actor) {
+								this.updateWarehouse.getWarehouse().get(oldPosition).remove(a);
+								System.out.println("I'm no longer at:"+oldPosition);
+							}
+						}
+						//Add Robot to the LinkedList at it's new Pos
+						this.updateWarehouse.getWarehouse().get(newPosition).add(actor);
+						((Robot) actor).setLocation(newPosition);
+						System.out.println("I'm now at:"+newPosition);
+					}
+					
 					if(((Robot)actor).crash(this.updateWarehouse.getWarehouse())) {
 						Location crashLocation = ((Robot)actor).getLocation();
 						LinkedList<Actor> crashedRobots = mapState.get(crashLocation);
@@ -165,7 +156,6 @@ public class Simulation {
 				}
 			}//for
 		warehouse = updateWarehouse;
-		updateWarehouse.setWarehouse(updateWarehouse.clearRobots());
 		WarehouseToConfigFile wc = new WarehouseToConfigFile();
 		ConfigFile cf = new ConfigFile();
 		ActorConfigConversion acc = new ActorConfigConversion();
@@ -190,14 +180,27 @@ public class Simulation {
 					ConfigStorageShelf css = acc.storageShelfToConfigStorageShelf((StorageShelf) a);
 					acss.add(css);
 				}
+				for (Order o : orders) {
+					ConfigOrder co = acc.orderToConfigOrder(o);
+					aco.add(co);
+				}
 			}
 		}
 		
-		//WarehouseController.runningConfigFile = //Make Config
+		//Write configfile to WarehouseController and update grid
+		
 		tickCounter++;
-		System.out.println(tickCounter);
+		System.out.println("No. Ticks:"+tickCounter);
+		try {
+			Thread.sleep(800);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		}
 		
+		System.out.println(stopString);
+		return stopString;
 	}// continueSimulation
 
 	public void dispatch() {

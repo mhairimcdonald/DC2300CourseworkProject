@@ -36,7 +36,7 @@ public class Warehouse {
 	public void setWarehouse(LinkedList<Actor> actors, int height, int width) {
 		for(int hIndex = 0; hIndex < height; hIndex++) {
 			for(int wIndex = 0; wIndex < width; wIndex++) {
-				Location mapLoc = new Location(wIndex, hIndex);
+				Location mapLoc = new Location(hIndex, wIndex);
 				LinkedList<Actor> ll = new LinkedList<Actor>();
 				warehouse.put(mapLoc, ll);
 			}
@@ -44,9 +44,18 @@ public class Warehouse {
 		
 		for(Actor actor: actors) {
 			Location loc = actor.getLocation();
-			LinkedList<Actor> currentLocActors = new LinkedList<Actor>();
-			currentLocActors.add(actor);
-			warehouse.put(loc, currentLocActors);
+			int lrow = loc.getRow();
+			int lcol = loc.getCol();
+			for (Location l : warehouse.keySet()) {
+				if (l.getCol() == lcol && l.getRow() == lrow ) {
+					if (actor instanceof Robot) {((Robot)actor).setLocation(l); }
+					else if (actor instanceof StorageShelf) {((StorageShelf)actor).setLocation(l); }
+					else if (actor instanceof PackingStation) {((PackingStation)actor).setLocation(l); }
+					else if (actor instanceof ChargingPod) {((ChargingPod)actor).setLocation(l); }
+					
+					warehouse.get(l).add(actor);
+				}
+			}
 		}
 	}
 
@@ -82,7 +91,7 @@ public class Warehouse {
 	}
 	
 	public LinkedList<Actor> getObjectAt(int row, int col) {
-		Location location = new Location(col, row);
+		Location location = new Location(row, col);
 		return warehouse.get(location);
 	}
 	
