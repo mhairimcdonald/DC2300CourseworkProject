@@ -79,7 +79,6 @@ public class PackingStation implements Actor {
 		} else {//If you have a robot, check if they're in your place.
 			if (robot.getLocation()==location) {
 				if (robot.takeOrder()) {
-					System.out.println("My Robot Arrived!");
 					haveItems = true;
 				}
 			}

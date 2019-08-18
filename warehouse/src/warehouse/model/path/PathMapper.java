@@ -123,7 +123,6 @@ public class PathMapper {
 		for (Location l : valueMap.keySet()) {
 			if (l.getCol() == currXPos && (l.getRow() == currYPos+1 || l.getRow() == currYPos-1)) {
 				if (i<4) {
-					System.out.println("Surround: ["+l.getCol()+","+l.getRow()+"]");
 					surr[i] = l;
 					i++;
 				} else {
@@ -133,7 +132,6 @@ public class PathMapper {
 				
 			} else if (l.getRow() == currYPos && (l.getCol() == currXPos+1 || l.getCol() == currXPos-1)) {
 				if (i<4) {
-					System.out.println("Surround: ["+l.getCol()+","+l.getRow()+"]");
 					surr[i] = l;
 					i++;
 				} else {

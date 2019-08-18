@@ -25,6 +25,7 @@ public class Simulation {
 	private ArrayList<String> listOfStorageLocations;
 	private String stopString = null;
 	private ConfigFile oldConfig;
+	private String ordersLeft;
 	//public static PathFinding Variable robots will use to work out next location/ distance to certain locations
 
 	public void start(ConfigFile cf) {
@@ -98,28 +99,19 @@ public class Simulation {
 					Location oldPosition = actor.getLocation(); //This is where I am.
 					
 					if (newPosition == null || newPosition == oldPosition) {
-						System.out.println("I didn't move. I'm already there.");
 						//don't move. I'm fine
 					} else if (newPosition != oldPosition) {
-					
-					System.out.println("===================================\n"
-							+ "I want to move to:"+newPosition+"\n"
-									+ "I'm currently at:"+oldPosition+"\n"
-											+ "My Destination is: ["+((Robot)actor).getCurrentDestination().getCol()+","+((Robot)actor).getCurrentDestination().getRow()+"]\n"
-											+ "===================================");
 					
 						//Remove Robot from its LinkedLisk<Actor> at it's current Pos
 						for (Actor a : this.updateWarehouse.getWarehouse().get(oldPosition)) {
 							if (a == actor) {
 								this.updateWarehouse.getWarehouse().get(oldPosition).remove(a);
-								System.out.println("I'm no longer at:"+oldPosition);
 								break;
 							}
 						}
 						//Add Robot to the LinkedList at it's new Pos
 						this.updateWarehouse.getWarehouse().get(newPosition).add(actor);
 						((Robot) actor).setLocation(newPosition);
-						System.out.println("I'm now at:"+newPosition);
 					}
 					
 					if(((Robot)actor).crash(this.updateWarehouse.getWarehouse())) {
@@ -147,8 +139,7 @@ public class Simulation {
 					}
 					
 				} else {
-					System.out.println("StorageShelf");
-
+					//Storage Shelf
 				}
 			}//for
 		if(orders.isEmpty() && allDispatched) {					
@@ -198,6 +189,12 @@ public class Simulation {
 		}
 		if (orders.isEmpty() && allDispatched){
 			cf =  null;
+		}
+		String remainingOrders = orders.toString();
+		ordersLeft = orders.toString();
+		if (!remainingOrders.equals(ordersLeft)) {
+			remainingOrders = ordersLeft;
+			System.out.println(remainingOrders);
 		}
 		return cf;
 		

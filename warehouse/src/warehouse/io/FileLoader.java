@@ -48,16 +48,12 @@ public class FileLoader {
 	private boolean checkAndAdd(String s, ConfigFile cf) {
 		if (s.contains("width")) {
 			cf.setWidth(Integer.parseInt(s.substring(6)));
-			System.out.println(cf.getWidth());
 		} else if (s.contains("height")) {
 			cf.setHeight(Integer.parseInt(s.substring(7)));
-			System.out.println(cf.getHeight());
 		} else if (s.contains("capacity")) {
 			cf.setCapacity(Integer.parseInt(s.substring(9)));
-			System.out.println(cf.getCapacity());
 		} else if (s.contains("chargeSpeed")) {
 			cf.setChargeSpeed(Integer.parseInt(s.substring(12)));
-			System.out.println(cf.getChargeSpeed());
 		} else if (s.contains("podRobot")) {
 			/*
 			 * Remove "podRobot" from string, then create array of
@@ -67,8 +63,6 @@ public class FileLoader {
 			ArrayList<String> strings = parseString(s);
 			ConfigRobot cr = setupRobot(strings);
 			cf.addRobot(cr);
-			
-			System.out.println("Robot:" + cr.getuID() + ", at (Row:" + cr.getRow() + "|Col:" + cr.getCol() + ") | ChargingPod: "+cr.getChargingPoduID());
 			
 		} else if (s.contains("shelf")) {
 			/*
@@ -80,8 +74,6 @@ public class FileLoader {
 			ConfigStorageShelf cs = setupShelf(strings);
 			cf.addShelf(cs);
 			
-			System.out.println("Shelf:" + cs.getuID() + ", at (Row:" + cs.getRow() + "|Col:" + cs.getCol() + ")");
-			
 		} else if (s.contains("station")) {
 			
 			/*
@@ -92,8 +84,6 @@ public class FileLoader {
 			ArrayList<String> strings = parseString(s);
 			ConfigPackingStation cp = setupStation(strings);
 			cf.addStation(cp);
-			
-			System.out.println("Station:" + cp.getuID() + ", at (Row:" + cp.getRow() + "|Col:" + cp.getCol() + ")");
 			
 		} else if (s.contains("order")) {
 			/*
@@ -112,7 +102,6 @@ public class FileLoader {
 				out += "|";
 				i++;
 			} 
-			System.out.println("Order:"+co.getTicksToPack()+" has pieces at Storage Shelves: |"+out);
 		}
 		return false;
 	}

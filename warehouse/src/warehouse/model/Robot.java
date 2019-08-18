@@ -259,8 +259,6 @@ public class Robot implements Actor {
 					for (String s : shelfuIDs) {
 						if (s.equals(((StorageShelf) a).getUID()))  {
 							destinations.add(a.getLocation());
-							
-							System.out.println("Robot<"+getUID()+">'s destination is: ["+a.getLocation().getCol()+","+a.getLocation().getRow()+"]");
 						}
 					}
 				}
@@ -330,9 +328,6 @@ public class Robot implements Actor {
 					}
 				} else {//I'm not there yet. Move!
 					l = getNextLoc(pm, mapState);
-					if (l!=null) {
-						System.out.println("I returned: ["+l.getCol()+","+l.getRow()+"]");
-					}
 				}
 				
 			}
@@ -344,7 +339,7 @@ public class Robot implements Actor {
 			} else {
 				setCurrentCharge(currentCharge-1);//Otherwise, reduce charge by 1.
 			}
-			System.out.println("Charge Remaining:["+getCurrentCharge()+"]");
+			System.out.println(getUID()+" charge remaining:["+getCurrentCharge()+"]");
 		} else {
 			System.out.println("No charge used");
 		}
@@ -427,7 +422,6 @@ public class Robot implements Actor {
 		 * Get the number of cell-movements needed to get to 
 		 * the Robot's Charging Pod. Then work out charge cost.
 		 */
-		System.out.println("ChargePod:["+chargePodLocation.getCol()+","+chargePodLocation.getRow()+"]");
 		int chargePadCost = getChargeCost(pm, mapState, chargePodLocation);
 		int leeway = Math.abs(maxCharge/5);
 		if (chargePadCost > currentCharge+leeway) {
@@ -443,9 +437,6 @@ public class Robot implements Actor {
 		pm.setupMapper(mapState, currentDestination);
 		pm.setObstructions(location);
 		Location next = pm.getNextNearest(location);
-		if (next!=null) {
-			System.out.println("Next Nearest: ["+next.getCol()+","+next.getRow()+"]");
-		}
 		
 		return next;
 	}
