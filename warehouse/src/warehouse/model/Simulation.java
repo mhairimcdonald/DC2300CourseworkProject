@@ -25,6 +25,7 @@ public class Simulation {
 	private ArrayList<String> listOfStorageLocations;
 	private String stopString = null;
 	private ConfigFile oldConfig;
+	private String ordersLeft;
 	//public static PathFinding Variable robots will use to work out next location/ distance to certain locations
 
 	public void start(ConfigFile cf) {
@@ -52,19 +53,17 @@ public class Simulation {
 		}
 		
 		for(ConfigActor actor: configActors) {
+			ActorConfigConversion acc = new ActorConfigConversion();
 			if (actor instanceof ConfigRobot) {
-				int row = actor.getRow();
-				int col = actor.getCol();
-				String UID = actor.getuID();
-				Location location = new Location(row, col);
-				String poduID = ((ConfigRobot)actor).getChargingPoduID();
-				int chargeSpeed = cf.getChargeSpeed();
-				int capacity = cf.getCapacity();
-				Robot robot = new Robot(poduID, location, capacity, location, UID);
-				ChargingPod chargePod = new ChargingPod(location, poduID, chargeSpeed, robot);
-				actors.add(chargePod);
-				robots.add(robot);
-				actors.add(robot);
+				Robot r = acc.configRobotToRobot((ConfigRobot)actor);
+				r.setMaxCharge(cf.getCapacity());
+				r.setCurrentCharge(cf.getCapacity());
+				ChargingPod cp = acc.configRobotToChargingPod((ConfigRobot)actor);
+				cp.setChargingSpeed(cf.getChargeSpeed());
+				cp.setMatchingRobot(r);
+				actors.add(cp);
+				robots.add(r);
+				actors.add(r);
 			} else if (actor instanceof ConfigStorageShelf) {
 				int row = actor.getRow();
 				int col = actor.getCol();
@@ -82,41 +81,6 @@ public class Simulation {
 			} else {
 				System.out.println("Invalid");
 			}
-			/*
-			switch(actor.getClass().getCanonicalName()) {
-			case "ConfigRobot":{
-				int row = actor.getRow();
-				int col = actor.getCol();
-				String UID = actor.getuID();
-				Location location = new Location(row, col);
-				String poduID = ((ConfigRobot)actor).getChargingPoduID();
-				int chargeSpeed = cf.getChargeSpeed();
-				int capacity = cf.getCapacity();
-				Robot robot = new Robot(poduID, location, capacity, location, UID);
-				ChargingPod chargePod = new ChargingPod(location, poduID, chargeSpeed, robot);
-				actors.add(chargePod);
-				robots.add(robot);
-				actors.add(robot);
-			}// case ConfigRobot
-			case "ConfigStorageShelf":{
-				int row = actor.getRow();
-				int col = actor.getCol();
-				String UID = actor.getuID();
-				Location location = new Location(row, col);
-				StorageShelf storageShelf = new StorageShelf(location, UID);
-				actors.add(storageShelf);
-			}//case ConfigStorageShelf
-			case "ConfigPackingStation":{
-				int row = actor.getRow();
-				int col = actor.getCol();
-				String UID = actor.getuID();
-				Location location = new Location(row, col);
-				PackingStation packingStation = new PackingStation(location, UID);
-				actors.add(packingStation);
-			}// case ConfigPackingStation
-			
-			}//switch
-			*/
 		}//for Loop
 		warehouse = new Warehouse(width, height);
 		warehouse.setWarehouse(actors, width, height);
@@ -124,15 +88,32 @@ public class Simulation {
 	}// start
 
 
-	public void continueSimulation() {
-		while(running) {
-			Boolean finished = false;
+	public ConfigFile continueSimulation() {
+			updateWarehouse = warehouse;
 			Boolean allDispatched = true;
 			for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
 				Actor actor = iter.next();
 				if (actor instanceof Robot) {
 					
-					((Robot)actor).tick(this.updateWarehouse.getWarehouse());
+					Location newPosition = ((Robot)actor).tick(this.updateWarehouse.getWarehouse()); //I want to move here
+					Location oldPosition = actor.getLocation(); //This is where I am.
+					
+					if (newPosition == null || newPosition == oldPosition) {
+						//don't move. I'm fine
+					} else if (newPosition != oldPosition) {
+					
+						//Remove Robot from its LinkedLisk<Actor> at it's current Pos
+						for (Actor a : this.updateWarehouse.getWarehouse().get(oldPosition)) {
+							if (a == actor) {
+								this.updateWarehouse.getWarehouse().get(oldPosition).remove(a);
+								break;
+							}
+						}
+						//Add Robot to the LinkedList at it's new Pos
+						this.updateWarehouse.getWarehouse().get(newPosition).add(actor);
+						((Robot) actor).setLocation(newPosition);
+					}
+					
 					if(((Robot)actor).crash(this.updateWarehouse.getWarehouse())) {
 						Location crashLocation = ((Robot)actor).getLocation();
 						LinkedList<Actor> crashedRobots = mapState.get(crashLocation);
@@ -151,21 +132,21 @@ public class Simulation {
 						if (((PackingStation) actor).needOrder(nextOrder)) {
 							orders.removeFirst();
 						}
-						((PackingStation)actor).tick(robots);
+					}
+					((PackingStation)actor).tick(robots);
+					if (((PackingStation)actor).getTicksLeft()!=-1){
+						allDispatched = false;
 					}
 					
 				} else {
-					System.out.println("Other!");
-
-				}
-				if(orders.isEmpty() && allDispatched) {
-					stopString = "The simulation is complete with: " + tickCounter;
-					running = false;
-
+					//Storage Shelf
 				}
 			}//for
+		if(orders.isEmpty() && allDispatched) {					
+			stopString = "The simulation is complete with: " + tickCounter;
+			running = false;
+		}
 		warehouse = updateWarehouse;
-		updateWarehouse.setWarehouse(updateWarehouse.clearRobots());
 		WarehouseToConfigFile wc = new WarehouseToConfigFile();
 		ConfigFile cf = new ConfigFile();
 		ActorConfigConversion acc = new ActorConfigConversion();
@@ -190,15 +171,34 @@ public class Simulation {
 					ConfigStorageShelf css = acc.storageShelfToConfigStorageShelf((StorageShelf) a);
 					acss.add(css);
 				}
+				for (Order o : orders) {
+					ConfigOrder co = acc.orderToConfigOrder(o);
+					aco.add(co);
+				}
 			}
 		}
 		
-		//WarehouseController.runningConfigFile = //Make Config
-		tickCounter++;
-		System.out.println(tickCounter);
-		}
+		//Write configfile to WarehouseController and update grid
 		
-	}// continueSimulation
+		tickCounter++;
+		System.out.println("No. Ticks:"+tickCounter);
+
+		WarehouseController.outputMessage = stopString;
+		if (running == false) {
+			cf = null;
+		}
+		if (orders.isEmpty() && allDispatched){
+			cf =  null;
+		}
+		String remainingOrders = orders.toString();
+		ordersLeft = orders.toString();
+		if (!remainingOrders.equals(ordersLeft)) {
+			remainingOrders = ordersLeft;
+			System.out.println(remainingOrders);
+		}
+		return cf;
+		
+		}		
 
 	public void dispatch() {
 

@@ -2,12 +2,12 @@ package warehouse.model;
 
 public class Location {
 	
-	private int row;
 	private int col;
-	
+	private int row;
+		
 	public Location(int row, int col) {
-		this.row = row;
 		this.col = col;
+		this.row = row;
 	}
 	
 	public Location() {
@@ -15,11 +15,11 @@ public class Location {
 	}
 
 	public String toString() {
-		return row+","+col;
+		return col+","+row;
 	}
 	
 	public int hashCode() {
-		return (row<<16) + col;
+		return (col<<16) + row;
 	}
 	
 	public int getRow() {

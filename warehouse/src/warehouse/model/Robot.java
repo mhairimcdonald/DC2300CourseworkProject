@@ -35,13 +35,12 @@ public class Robot implements Actor {
 		this.maxCharge = maxCharge;
 		this.location = location;
 		this.UID = uID;
-		this.destinations = null;
 		this.currentDestination = null;
 		this.item = false;
 		this.isCharging = false;
 		this.hasOrder = false;
 		this.orderReady = false;
-		this.destinations = null;
+		this.destinations = new LinkedList<Location>();
 		this.currentDestination = null;
 		this.order = null;
 	}
@@ -49,12 +48,13 @@ public class Robot implements Actor {
   //basic constructor
 	public Robot() {
 		this.destinations = new LinkedList<Location>();
+		this.currentDestination = null;
 		this.isCharging = false;
 		this.item = false;
-		hasOrder = false;
-		order = null;
-		orderReady = false;
-		packingStationLocation = null;
+		this.hasOrder = false;
+		this.order = null;
+		this.orderReady = false;
+		this.packingStationLocation = null;
 		
 	}
 	
@@ -228,6 +228,9 @@ public class Robot implements Actor {
 	}
 
 	public boolean takeOrder() {
+		if (currentDestination == packingStationLocation) {
+			orderReady = true;
+		}
 		if (orderReady) {
 			hasOrder = false;
 			order = null;
@@ -249,28 +252,48 @@ public class Robot implements Actor {
 		//Get the UIDs of the Storage Shelves
 		//Iterate over the mapState and look for Shelves with matching UIDs
 		ArrayList<String> shelfuIDs = o.getItemLocations();
+		Location packingLocation = null; //Initialise this.
 		for (Location l : mapState.keySet()) {
 			for (Actor a : mapState.get(l)) {
 				if (a instanceof StorageShelf) {
 					for (String s : shelfuIDs) {
-						if (s.contentEquals(((StorageShelf) a).getUID())) {
+						if (s.equals(((StorageShelf) a).getUID()))  {
 							destinations.add(a.getLocation());
 						}
 					}
 				}
+				/*
+				 * Find the PackingShelf with the same order and
+				 * Add it to the end of your destinations.
+				 */
+				else if (a instanceof PackingStation) {
+					if (((PackingStation)a).getCurrentOrder() == o) {//If it's the same order object
+						//Store this for now
+						packingLocation = ((PackingStation)a).getLocation();
+					}
+				}
 			}
 		}
+		//Finally, add the packing station's location to the end and store it
+		setPackingStationLocation(packingLocation);
+		destinations.add(packingLocation);
+		//Set Robot's next destination.
+		currentDestination = destinations.getFirst();
+		
 	}
 	
 	public Location tick(HashMap<Location, LinkedList<Actor>> mapState) {
 		PathMapper pm = new PathMapper(); //Initialise the Pathfinding object
-		Location l = null; //Initialise the return.
+		Location l = location; //Initialise the return.
 		
 		
 		//Am I charging currently?
 		if (isCharging) {
 			if (currentCharge == maxCharge) {//If full on charge
 				setCharging(false);
+				if (!destinations.isEmpty()) {
+					setCurrentDestination(destinations.getFirst());
+				}
 			} else {//Still charging. Wait
 				return location;
 			}
@@ -279,7 +302,8 @@ public class Robot implements Actor {
 		//Do I have order but no destination?	
 		if (order == null) { //If I have no order, go to the chargepod.
 			setCurrentDestination(chargePodLocation);
-		} else {//If I do have an order
+			l = getNextLoc(pm, mapState);
+		} else {//If I do have an order 
 			if (destinations.isEmpty()) {//But I don't have a destination
 				parseOrder(order, mapState);
 			} else {//I have an order and a destination
@@ -295,14 +319,29 @@ public class Robot implements Actor {
 						return location;
 					} else {//You're collecting items from a Shelf
 						destinations.removeFirst();
+						setItem(true);
+						if (!destinations.isEmpty() && destinations.getFirst()!=null) {
+							setCurrentDestination(destinations.getFirst());
+						}
+						
 						return location; //Stay here to 'unload'
 					}
 				} else {//I'm not there yet. Move!
 					l = getNextLoc(pm, mapState);
-					System.out.println("I returned: ["+l.getCol()+","+l.getRow()+"]");
 				}
 				
 			}
+		}
+		
+		if (l!=location) {
+			if (hasItem()) {
+				setCurrentCharge(currentCharge-2);//If you have an item, reduce charge by 2
+			} else {
+				setCurrentCharge(currentCharge-1);//Otherwise, reduce charge by 1.
+			}
+			System.out.println(getUID()+" charge remaining:["+getCurrentCharge()+"]");
+		} else {
+			System.out.println("No charge used");
 		}
 		
 		return l;
@@ -362,9 +401,11 @@ public class Robot implements Actor {
 			//If the robot is currently on it's charge pad
 			if (location == chargePodLocation ) {
 				setCharging(true);
+				return location;
 			} else {
 				//If not at your chargepad but wants to get there, move towards it.
 				pm.setupMapper(mapState, chargePodLocation);
+				pm.setObstructions(location);
 				Location nextPos = pm.getNextNearest(location);
 				return nextPos;
 			}
@@ -381,32 +422,28 @@ public class Robot implements Actor {
 		 * Get the number of cell-movements needed to get to 
 		 * the Robot's Charging Pod. Then work out charge cost.
 		 */
-		System.out.println("ChargePod:["+chargePodLocation.getCol()+","+chargePodLocation.getRow()+"]");
 		int chargePadCost = getChargeCost(pm, mapState, chargePodLocation);
-		
-		if (chargePadCost > currentCharge/2 || (currentCharge-nextDestCost) < nextDestCost+chargePadCost) {
+		int leeway = Math.abs(maxCharge/5);
+		if (chargePadCost > currentCharge+leeway) {
 			System.out.println("I want to charge!");
 			/*
-			 * If amount of charge to get to your pad is more 
-			 * than half your remaining charge
-			 * Or
-			 * If remaining charge after destination is greater 
-			 * than charge cost to get to destination and then 
-			 * to your pad
+			 * If amount of charge to get to your pad is 
+			 * greater than 10% more than your remaining charge
 			 */
 			setCurrentDestination(chargePodLocation);
 		} else {
 			setCurrentDestination(getDestinations().getFirst());
 		}
 		pm.setupMapper(mapState, currentDestination);
+		pm.setObstructions(location);
 		Location next = pm.getNextNearest(location);
-		System.out.println("Next Nearest: ["+next.getCol()+","+next.getRow()+"]");
 		
 		return next;
 	}
 	
 	private int getChargeCost(PathMapper pm, HashMap<Location, LinkedList<Actor>> mapState, Location destination){
 		pm.setupMapper(mapState, destination);
+		pm.setObstructions(location);
 		
 		int costToDest = pm.getCurrentDistanceCost(location);
 		int actualCost = getActualCost(costToDest);

@@ -76,19 +76,16 @@ public class newWarehouseArrangement {
 		 * and two TextFields
 		 */
 		for (int i = 0; i < properties[4]; i++) {
-			System.out.println("Robot "+i);
 			String s = "No. Robots & Pads";
 			HBox h = createEntryPoint(s, "robot", i, 0);
 			robotsVBox.getChildren().add(h);
 		}
 		for (int i = 0; i < properties[5]; i++) {
-			System.out.println("Shelf "+i);
 			String s = "No. Storage Shelves";
 			HBox h = createEntryPoint(s, "shelf", i, 1);
 			shelvesVBox.getChildren().add(h);
 		}
 		for (int i = 0; i < properties[6]; i++) {
-			System.out.println("station "+i);
 			String s = "No. Packing Station";
 			HBox h = createEntryPoint(s, "station", i, 2);
 			stationsVBox.getChildren().add(h);

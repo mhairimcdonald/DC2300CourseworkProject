@@ -67,6 +67,7 @@ public class PackingStation implements Actor {
 			currentOrder = null;
 			robot = null;
 			haveItems = false;
+			return;
 		}
 		if (robot == null) { //If no robot, search robots for a free robot
 			for (Robot r : robots) {

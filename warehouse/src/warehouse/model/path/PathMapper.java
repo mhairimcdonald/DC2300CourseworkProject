@@ -26,11 +26,16 @@ public class PathMapper {
 		this.valueMap = m.getCostMap(destination, mapState);
 	}
 	
+	public void setupMapperNoObstructions(HashMap<Location, LinkedList<Actor>> mapState, Location destination) {
+		this.mapState = mapState;
+		ManhattanCostEstimator m = new ManhattanCostEstimator();
+		this.valueMap = m.getCostMap(destination, mapState);
+	}
+	
 	public void setupMapper(HashMap<Location, LinkedList<Actor>> mapState, Location destination) {
 		this.mapState = mapState;
 		ManhattanCostEstimator m = new ManhattanCostEstimator();
 		this.valueMap = m.getCostMap(destination, mapState);
-		setObstructions();
 	}
 	
 	public HashMap<Location, Integer> getValueMap() {
@@ -118,7 +123,6 @@ public class PathMapper {
 		for (Location l : valueMap.keySet()) {
 			if (l.getCol() == currXPos && (l.getRow() == currYPos+1 || l.getRow() == currYPos-1)) {
 				if (i<4) {
-					System.out.println("Surround: ["+l.getCol()+","+l.getRow()+"]");
 					surr[i] = l;
 					i++;
 				} else {
@@ -128,7 +132,6 @@ public class PathMapper {
 				
 			} else if (l.getRow() == currYPos && (l.getCol() == currXPos+1 || l.getCol() == currXPos-1)) {
 				if (i<4) {
-					System.out.println("Surround: ["+l.getCol()+","+l.getRow()+"]");
 					surr[i] = l;
 					i++;
 				} else {
@@ -140,10 +143,10 @@ public class PathMapper {
 		return surr;
 	}
 	
-	public void setObstructions() {
+	public void setObstructions(Location currentLocation) {
 		for (Location l : mapState.keySet()) { //Iterate over all Locations in the currentMap
 			for (Actor a : mapState.get(l)) {
-				if (a instanceof Robot) { //
+				if (a instanceof Robot && l!=currentLocation) { //
 					setObstructed(l);
 				}
 			}

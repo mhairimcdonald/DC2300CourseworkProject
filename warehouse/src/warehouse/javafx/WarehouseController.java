@@ -55,6 +55,8 @@ public class WarehouseController {
 	public static ConfigFile runningConfigFile;
 	public static boolean configValid;
 	private Pane[][] gridPaneIndex;
+	
+	public static String outputMessage;
 
 	public WarehouseController() {
 		runningConfigFile = new ConfigFile();
@@ -84,7 +86,20 @@ public class WarehouseController {
 		resetButton.setDefaultButton(true);
 		statusUpdate.setText("Status: Running");
 		sim.start(runningConfigFile);
-		sim.continueSimulation();
+		boolean running = true;
+		while (running) {
+			ConfigFile newConfig = sim.continueSimulation();
+			if (newConfig == null) {
+				running = false;
+				break;
+			}
+			runningConfigFile = newConfig;
+			configValid = true;
+			reloadRunningConfigFile();
+		}
+		
+		System.out.println(outputMessage);
+		
 
 	}
 
