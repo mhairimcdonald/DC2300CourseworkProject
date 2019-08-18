@@ -48,12 +48,13 @@ public class Warehouse {
 			int lcol = loc.getCol();
 			for (Location l : warehouse.keySet()) {
 				if (l.getCol() == lcol && l.getRow() == lrow ) {
-					if (actor instanceof Robot) {((Robot)actor).setLocation(l); }
+					if (actor instanceof Robot) {((Robot)actor).setLocation(l); ((Robot)actor).setChargePodLocation(l);}
 					else if (actor instanceof StorageShelf) {((StorageShelf)actor).setLocation(l); }
 					else if (actor instanceof PackingStation) {((PackingStation)actor).setLocation(l); }
 					else if (actor instanceof ChargingPod) {((ChargingPod)actor).setLocation(l); }
 					
 					warehouse.get(l).add(actor);
+					break;
 				}
 			}
 		}

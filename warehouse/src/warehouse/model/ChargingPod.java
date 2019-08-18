@@ -47,6 +47,7 @@ public class ChargingPod implements Actor {
 			Location robotLocation = robot.getLocation();
 			if((robotLocation == this.getLocation()) && (this.getMatchingRobot() == robot)) {
 				charge(robot);
+				robot.setCharging(true);
 			}
 		}
 		
@@ -57,6 +58,7 @@ public class ChargingPod implements Actor {
 		currentRobot.setCurrentCharge(currentRobot.getCurrentCharge() + chargingSpeed);
 		if (currentRobot.getCurrentCharge()> currentRobot.getMaxCharge()) {
 			currentRobot.setCurrentCharge(currentRobot.getMaxCharge());//Probably a better way of dealing with max charge
+			currentRobot.setCharging(false);
 		}
 		
 	}//charge

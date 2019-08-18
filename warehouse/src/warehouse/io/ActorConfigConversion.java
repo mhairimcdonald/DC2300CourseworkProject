@@ -99,6 +99,7 @@ public class ActorConfigConversion {
 		r.setUID(uID);
 		r.setChargePodID(chargingPoduID);
 		r.setLocation(l);
+		r.setChargePodLocation(l);
 		
 		return r;
 	}

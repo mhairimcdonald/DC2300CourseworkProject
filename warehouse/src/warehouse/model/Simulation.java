@@ -52,19 +52,17 @@ public class Simulation {
 		}
 		
 		for(ConfigActor actor: configActors) {
+			ActorConfigConversion acc = new ActorConfigConversion();
 			if (actor instanceof ConfigRobot) {
-				int row = actor.getRow();
-				int col = actor.getCol();
-				String UID = actor.getuID();
-				Location location = new Location(row, col);
-				String poduID = ((ConfigRobot)actor).getChargingPoduID();
-				int chargeSpeed = cf.getChargeSpeed();
-				int capacity = cf.getCapacity();
-				Robot robot = new Robot(poduID, location, capacity, location, UID);
-				ChargingPod chargePod = new ChargingPod(location, poduID, chargeSpeed, robot);
-				actors.add(chargePod);
-				robots.add(robot);
-				actors.add(robot);
+				Robot r = acc.configRobotToRobot((ConfigRobot)actor);
+				r.setMaxCharge(cf.getCapacity());
+				r.setCurrentCharge(cf.getCapacity());
+				ChargingPod cp = acc.configRobotToChargingPod((ConfigRobot)actor);
+				cp.setChargingSpeed(cf.getChargeSpeed());
+				cp.setMatchingRobot(r);
+				actors.add(cp);
+				robots.add(r);
+				actors.add(r);
 			} else if (actor instanceof ConfigStorageShelf) {
 				int row = actor.getRow();
 				int col = actor.getCol();
@@ -89,10 +87,8 @@ public class Simulation {
 	}// start
 
 
-	public String continueSimulation() {
-		while(running) {
+	public ConfigFile continueSimulation() {
 			updateWarehouse = warehouse;
-			Boolean finished = false;
 			Boolean allDispatched = true;
 			for(Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
 				Actor actor = iter.next();
@@ -101,21 +97,23 @@ public class Simulation {
 					Location newPosition = ((Robot)actor).tick(this.updateWarehouse.getWarehouse()); //I want to move here
 					Location oldPosition = actor.getLocation(); //This is where I am.
 					
+					if (newPosition == null || newPosition == oldPosition) {
+						System.out.println("I didn't move. I'm already there.");
+						//don't move. I'm fine
+					} else if (newPosition != oldPosition) {
+					
 					System.out.println("===================================\n"
 							+ "I want to move to:"+newPosition+"\n"
 									+ "I'm currently at:"+oldPosition+"\n"
 											+ "My Destination is: ["+((Robot)actor).getCurrentDestination().getCol()+","+((Robot)actor).getCurrentDestination().getRow()+"]\n"
 											+ "===================================");
 					
-					if (newPosition==null) {
-						System.out.println("I didn't move. I'm already there.");
-						//don't move. I'm fine
-					} else if (newPosition != oldPosition) {
 						//Remove Robot from its LinkedLisk<Actor> at it's current Pos
 						for (Actor a : this.updateWarehouse.getWarehouse().get(oldPosition)) {
 							if (a == actor) {
 								this.updateWarehouse.getWarehouse().get(oldPosition).remove(a);
 								System.out.println("I'm no longer at:"+oldPosition);
+								break;
 							}
 						}
 						//Add Robot to the LinkedList at it's new Pos
@@ -142,19 +140,21 @@ public class Simulation {
 						if (((PackingStation) actor).needOrder(nextOrder)) {
 							orders.removeFirst();
 						}
-						((PackingStation)actor).tick(robots);
+					}
+					((PackingStation)actor).tick(robots);
+					if (((PackingStation)actor).getTicksLeft()!=-1){
+						allDispatched = false;
 					}
 					
 				} else {
-					System.out.println("Other!");
-
-				}
-				if(orders.isEmpty() && allDispatched) {
-					stopString = "The simulation is complete with: " + tickCounter;
-					running = false;
+					System.out.println("StorageShelf");
 
 				}
 			}//for
+		if(orders.isEmpty() && allDispatched) {					
+			stopString = "The simulation is complete with: " + tickCounter;
+			running = false;
+		}
 		warehouse = updateWarehouse;
 		WarehouseToConfigFile wc = new WarehouseToConfigFile();
 		ConfigFile cf = new ConfigFile();
@@ -191,17 +191,17 @@ public class Simulation {
 		
 		tickCounter++;
 		System.out.println("No. Ticks:"+tickCounter);
-		try {
-			Thread.sleep(800);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		WarehouseController.outputMessage = stopString;
+		if (running == false) {
+			cf = null;
 		}
+		if (orders.isEmpty() && allDispatched){
+			cf =  null;
 		}
+		return cf;
 		
-		System.out.println(stopString);
-		return stopString;
-	}// continueSimulation
+		}		
 
 	public void dispatch() {
 
